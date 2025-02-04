@@ -4,12 +4,19 @@ import 'package:flutter/material.dart';
 class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool isPassword;
+  final TextEditingController? controller;
 
-  const CustomTextField({super.key, required this.hintText, this.isPassword = false});
+  const CustomTextField({
+    super.key,
+    required this.hintText,
+    this.isPassword = false,
+    this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       obscureText: isPassword,
       decoration: InputDecoration(
         hintText: hintText,
@@ -21,12 +28,13 @@ class CustomTextField extends StatelessWidget {
   }
 }
 
+
 /// Custom Button Widget
 class CustomButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;  // Make onPressed nullable
 
-  const CustomButton({super.key, required this.text, required this.onPressed});
+  const CustomButton({super.key, required this.text, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +46,7 @@ class CustomButton extends StatelessWidget {
         ),
         padding: const EdgeInsets.symmetric(vertical: 14),
       ),
-      onPressed: onPressed,
+      onPressed: onPressed,  // It can now accept null
       child: Text(
         text,
         style: const TextStyle(fontSize: 18, color: Colors.white),
