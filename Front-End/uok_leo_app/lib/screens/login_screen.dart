@@ -58,7 +58,8 @@ class LoginScreen extends StatelessWidget {
             CustomButton(
               text: 'Sign Up',
               onPressed: () {
-                // Add sign-up functionality
+                // Navigate to the RegisterScreen using the route defined in AppRoutes
+                Navigator.pushNamed(context, '/register');
               },
             ),
           ],
