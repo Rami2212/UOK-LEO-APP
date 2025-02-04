@@ -58,7 +58,7 @@ class RegisterScreen extends StatelessWidget {
 
             // Confirm Password Input
             const CustomTextField(hintText: 'Confirm Password', isPassword: true),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
 
             // Register Button
             CustomButton(
