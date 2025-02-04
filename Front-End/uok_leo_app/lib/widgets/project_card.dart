@@ -17,7 +17,7 @@ class ProjectCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.network(imageUrl, height: 150, width: double.infinity, fit: BoxFit.cover),
+            child: Image.network(imageUrl, height: 300, width: double.infinity, fit: BoxFit.cover),
           ),
           Padding(
             padding: EdgeInsets.all(10),
@@ -34,7 +34,10 @@ class ProjectCard extends StatelessWidget {
                     backgroundColor: Colors.orange,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   ),
-                  child: Text("View More"),
+                  child: Text(
+                      "View More",
+                      style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             ),

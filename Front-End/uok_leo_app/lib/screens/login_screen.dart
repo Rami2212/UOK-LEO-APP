@@ -61,6 +61,18 @@ class LoginScreen extends StatelessWidget {
                 Navigator.pushNamed(context, '/register');
               },
             ),
+
+            //for the testing
+
+            const SizedBox(height: 10),
+
+            // Sign Up Button
+            CustomButton(
+              text: 'Home(testing)',
+              onPressed: () {
+                Navigator.pushNamed(context, '/home');
+              },
+            ),
           ],
         ),
       ),
