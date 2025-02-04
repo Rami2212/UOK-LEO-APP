@@ -1,17 +1,15 @@
 class RegistrationResponse {
-  final String message; // Success or error message
-  final String userId;  // User ID if needed
-  final String token;  // Token if needed
+  final String userId;
+  final String token;
 
   RegistrationResponse({
-    required this.message,
     required this.userId,
     required this.token,
   });
 
+  // Convert JSON response to RegistrationResponse model
   factory RegistrationResponse.fromJson(Map<String, dynamic> json) {
     return RegistrationResponse(
-      message: json['message'],
       userId: json['userId'],
       token: json['token'],
     );

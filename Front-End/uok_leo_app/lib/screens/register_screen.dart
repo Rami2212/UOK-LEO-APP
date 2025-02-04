@@ -23,7 +23,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  String? _selectedRole;
+  final List<String> _roles = ['Member', 'Director'];
+
   bool _isLoading = false;
+
+  String? _role = 'Member';
 
   void _handleRegister() async {
     if (_passwordController.text != _confirmPasswordController.text) {
@@ -45,6 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       avenue: _avenueController.text.trim(),
       mobileNumber: _mobileController.text.trim(),
       password: _passwordController.text.trim(),
+      role: _role!,
     );
 
     setState(() {
@@ -99,6 +105,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
             CustomTextField(hintText: 'Password', controller: _passwordController, isPassword: true),
             const SizedBox(height: 10),
             CustomTextField(hintText: 'Confirm Password', controller: _confirmPasswordController, isPassword: true),
+            const SizedBox(height: 10),
+
+            CustomDropdown(
+              hintText: 'Select Role',
+              items: _roles,
+              value: _selectedRole,
+              onChanged: (String? newValue) {
+                setState(() {
+                  _selectedRole = newValue;
+                });
+              },
+            ),
+
             const SizedBox(height: 20),
             CustomButton(
               text: _isLoading ? "Registering..." : 'Register',

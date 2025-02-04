@@ -54,3 +54,39 @@ class CustomButton extends StatelessWidget {
     );
   }
 }
+
+class CustomDropdown extends StatelessWidget {
+  final String hintText;
+  final List<String> items;
+  final String? value;
+  final ValueChanged<String?> onChanged;
+
+  const CustomDropdown({
+    Key? key,
+    required this.hintText,
+    required this.items,
+    required this.value,
+    required this.onChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<String>(
+      value: value,
+      onChanged: onChanged,
+      decoration: InputDecoration(
+        labelText: hintText,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      ),
+      items: items.map((String item) {
+        return DropdownMenuItem<String>(
+          value: item,
+          child: Text(item),
+        );
+      }).toList(),
+    );
+  }
+}
