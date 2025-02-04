@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uok_leo_app/screens/home_screen.dart';
+import 'package:uok_leo_app/screens/login_screen.dart';
 import 'package:uok_leo_app/providers/auth_provider.dart';
-import 'package:uok_leo_app/routes/app_routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,19 +13,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
-      ],
+    return ChangeNotifierProvider(
+      create: (context) => AuthProvider(),
       child: MaterialApp(
-        title: 'UOK LEO APP',
-        debugShowCheckedModeBanner: false,
+        title: 'UOK LEO App',
         theme: ThemeData(
-          primarySwatch: Colors.deepPurple,
-          useMaterial3: true,
+          primarySwatch: Colors.blue,
         ),
-        initialRoute: '/login',
-        routes: AppRoutes.routes, // Navigation routes
+        home: Consumer<AuthProvider>(
+          builder: (context, auth, child) {
+            // Check if user is authenticated, if yes, navigate to HomeScreen
+            return auth.isAuthenticated ? const HomeScreen() : const LoginScreen();
+          },
+        ),
+        routes: AppRoutes.routes,
       ),
     );
   }
