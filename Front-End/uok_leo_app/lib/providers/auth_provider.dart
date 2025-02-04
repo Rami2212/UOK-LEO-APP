@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uok_leo_app/data/models/registration_request.dart';
+import 'package:uok_leo_app/data/models/registration_response.dart';
+import 'package:uok_leo_app/data/repositories/auth_repository.dart';
+
 import '../data/models/login_request.dart';
 import '../data/models/login_response.dart';
-import '../data/repositories/auth_repository.dart';
 
 class AuthProvider with ChangeNotifier {
   String? _userId;
@@ -55,5 +58,23 @@ class AuthProvider with ChangeNotifier {
     await prefs.remove('userId');
     await prefs.remove('token');
     notifyListeners();
+  }
+
+  // Registration Function
+  Future<bool> register(RegistrationRequest registrationRequest) async {
+    RegistrationResponse? response = await _authRepository.register(registrationRequest);
+
+    if (response != null) {
+      _userId = response.userId;
+      _token = response.token;
+      _isAuthenticated = true;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userId', _userId!);
+      await prefs.setString('token', _token!);
+      notifyListeners();
+      return true;
+    }
+    return false;
   }
 }
