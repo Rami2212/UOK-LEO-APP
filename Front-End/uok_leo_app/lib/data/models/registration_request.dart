@@ -8,6 +8,7 @@ class RegistrationRequest {
   final String avenue;
   final String mobileNumber;
   final String password;
+  final String role;
 
   RegistrationRequest({
     required this.name,
@@ -19,8 +20,10 @@ class RegistrationRequest {
     required this.avenue,
     required this.mobileNumber,
     required this.password,
+    required this.role,
   });
 
+  // Convert RegistrationRequest to JSON for API request
   Map<String, dynamic> toJson() {
     return {
       'name': name,
@@ -32,6 +35,7 @@ class RegistrationRequest {
       'avenue': avenue,
       'mobileNumber': mobileNumber,
       'password': password,
+      'role': role,
     };
   }
 }
