@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart';
+import '../screens/event_details_screen.dart';
+
+class EventCard extends StatelessWidget {
+  final String eventId;
+  final String imageUrl;
+  final String title;
+  final String date;
+  final String description;
+
+  EventCard({
+    required this.eventId,
+    required this.imageUrl,
+    required this.title,
+    required this.date,
+    required this.description,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+            child: Image.network(imageUrl, height: 180, width: double.infinity, fit: BoxFit.cover),
+          ),
+          Padding(
+            padding: EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                SizedBox(height: 5),
+                Text("📅 Date: $date", style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                SizedBox(height: 5),
+                Text(description, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14)),
+                SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => EventDetailsScreen(eventId: eventId)),
+                      );
+                    },
+                    child: Text("View Details", style: TextStyle(color: Colors.blue)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
