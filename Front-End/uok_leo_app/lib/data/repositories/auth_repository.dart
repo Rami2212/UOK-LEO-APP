@@ -21,13 +21,13 @@ class AuthRepository {
     if (response.statusCode == 200) {
       return LoginResponse.fromJson(jsonDecode(response.body));
     } else {
-      return null; // Handle error properly
+      return null;
     }
   }
 
   // Register method
   Future<RegistrationResponse?> register(RegistrationRequest registrationRequest) async {
-    final url = Uri.parse('$baseUrl/register'); // Your Spring Boot register endpoint
+    final url = Uri.parse('$baseUrl/register');
 
     try {
       final response = await http.post(
@@ -40,11 +40,11 @@ class AuthRepository {
         final data = json.decode(response.body);
         return RegistrationResponse.fromJson(data);
       } else {
-        return null; // Registration failed, handle errors appropriately
+        return null;
       }
     } catch (e) {
       print("Error during registration: $e");
-      return null; // Handle error cases
+      return null;
     }
   }
 }
