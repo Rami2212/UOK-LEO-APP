@@ -10,11 +10,13 @@ import '../data/models/login_response.dart';
 class AuthProvider with ChangeNotifier {
   String? _userId;
   String? _token;
+  String? _role;
   bool _isAuthenticated = false;
   final AuthRepository _authRepository = AuthRepository();
 
   bool get isAuthenticated => _isAuthenticated;
   String? get userId => _userId;
+  String? get role => _role;
 
   AuthProvider() {
     _loadAuthData();
@@ -25,6 +27,7 @@ class AuthProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     _userId = prefs.getString('userId');
     _token = prefs.getString('token');
+    _role = prefs.getString('role');
     _isAuthenticated = _userId != null;
     notifyListeners();
   }
@@ -37,11 +40,13 @@ class AuthProvider with ChangeNotifier {
     if (response != null) {
       _userId = response.userId;
       _token = response.token;
+      _role = response.role;
       _isAuthenticated = true;
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userId', _userId!);
       await prefs.setString('token', _token!);
+      await prefs.setString('role', _role!);
       notifyListeners();
       return true;
     }
@@ -57,6 +62,7 @@ class AuthProvider with ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('userId');
     await prefs.remove('token');
+    await prefs.remove('role');
     notifyListeners();
   }
 
@@ -67,11 +73,13 @@ class AuthProvider with ChangeNotifier {
     if (response != null) {
       _userId = response.userId;
       _token = response.token;
+      _role = response.role;
       _isAuthenticated = true;
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('userId', _userId!);
       await prefs.setString('token', _token!);
+      await prefs.setString('role', _role!);
       notifyListeners();
       return true;
     }
