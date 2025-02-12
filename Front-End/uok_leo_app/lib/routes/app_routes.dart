@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uok_leo_app/screens/calendar_screen.dart';
 import 'package:uok_leo_app/screens/login_screen.dart';
 import 'package:uok_leo_app/screens/register_screen.dart';
 import 'package:uok_leo_app/screens/home_screen.dart';
@@ -8,5 +9,6 @@ class AppRoutes {
     '/login': (context) => const LoginScreen(),
     '/register': (context) => const RegisterScreen(),
     '/home': (context) => HomeScreen(),
+    '/calendar': (context) => CalendarPage(isDirector: false),
   };
 }
