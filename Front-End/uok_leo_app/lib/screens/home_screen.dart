@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uok_leo_app/data/models/profile_screen.dart';
 import 'package:uok_leo_app/data/repositories/evaluation_repository.dart';
 import 'package:uok_leo_app/data/repositories/event_repository.dart';
 import 'package:uok_leo_app/screens/achievement_screen.dart';
 import 'package:uok_leo_app/screens/evaluation_screen.dart';
+import 'package:uok_leo_app/screens/notifications_screen.dart';
 import '../data/models/achievement.dart';
 import '../data/models/evaluation.dart';
 import '../data/models/event.dart';
@@ -61,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
       AchievementScreen(achievementsFuture: _achievementsFuture),
       EvaluationScreen(evaluationFuture: _evaluationsFuture),
       CalendarPage(isDirector: true),
-      Center(child: Text("Notifications Page")),
-      Center(child: Text("Profile Page")),
+      NotificationScreen(),
+      ProfileScreen(),
     ];
 
     return Scaffold(
