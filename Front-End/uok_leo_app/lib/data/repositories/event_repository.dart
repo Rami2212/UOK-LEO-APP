@@ -28,6 +28,17 @@ class EventRepository {
     }
   }
 
+  Future<List<Event>> fetchEventsByDate(String date) async {
+    final response = await http.get(Uri.parse("$baseUrl/events?date=$date"));
+
+    if (response.statusCode == 200) {
+      List<dynamic> jsonList = jsonDecode(response.body);
+      return jsonList.map((json) => Event.fromJson(json)).toList();
+    } else {
+      throw Exception("Failed to load events for the date $date");
+    }
+  }
+
   Future<BookDateResponse> bookEvent(BookDateRequest request) async {
     final response = await http.post(
       Uri.parse("$baseUrl/bookEvent"),

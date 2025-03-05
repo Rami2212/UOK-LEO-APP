@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import '../screens/event_details_screen.dart';
 
-class EventCard extends StatelessWidget {
-  final String eventId;
+class EvaluationCard extends StatelessWidget {
+  final String id;
   final String imageUrl;
-  final String title;
-  final String date;
+  final String name;
   final String description;
+  final String month;
 
-  EventCard({
-    required this.eventId,
+  EvaluationCard({
+    required this.id,
     required this.imageUrl,
-    required this.title,
-    required this.date,
+    required this.name,
     required this.description,
+    required this.month,
   });
 
   @override
@@ -34,24 +33,11 @@ class EventCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text(name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 SizedBox(height: 5),
-                Text(date, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
+                Text(month, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
                 SizedBox(height: 5),
                 Text(description, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14)),
-                SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EventDetailsScreen(eventId: eventId)),
-                      );
-                    },
-                    child: Text("View Details", style: TextStyle(color: Colors.blue)),
-                  ),
-                ),
               ],
             ),
           ),

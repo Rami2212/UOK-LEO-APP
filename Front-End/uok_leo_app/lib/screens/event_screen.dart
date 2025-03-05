@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:uok_leo_app/data/models/event.dart';
 import 'package:uok_leo_app/widgets/event_card.dart';
 
-class HomeScreenContent extends StatelessWidget {
+class EventScreen extends StatelessWidget {
   final Future<List<Event>> eventsFuture;
 
-  HomeScreenContent({required this.eventsFuture});
+  EventScreen({required this.eventsFuture});
 
   @override
   Widget build(BuildContext context) {
