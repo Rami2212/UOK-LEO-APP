@@ -91,7 +91,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "${_selectedDay.day} . ${_selectedDay.month} . ${_selectedDay.year}",
+                  "${_selectedDay.day}-${_selectedDay.month}-${_selectedDay.year}",
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orange),
                 ),
 
