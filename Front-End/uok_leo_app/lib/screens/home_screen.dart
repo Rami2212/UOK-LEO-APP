@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uok_leo_app/data/repositories/evaluation_repository.dart';
 import 'package:uok_leo_app/data/repositories/event_repository.dart';
+import 'package:uok_leo_app/screens/achievement_screen.dart';
+import 'package:uok_leo_app/screens/evaluation_screen.dart';
+import '../data/models/achievement.dart';
+import '../data/models/evaluation.dart';
 import '../data/models/event.dart';
+import '../data/repositories/achievement_repository.dart';
 import '../screens/calendar_screen.dart';
-import '../screens/home_screen_content.dart';
+import '../screens/event_screen.dart';
 import '../widgets/bottom_nav.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -15,13 +21,20 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool? _isDirector;
   late Future<List<Event>> _eventsFuture;
+  late Future<List<Achievement>> _achievementsFuture;
+  late Future<List<Evaluation>> _evaluationsFuture;
   final EventRepository _eventRepository = EventRepository();
+  final AchievementRepository _achievementsRepository = AchievementRepository();
+  final EvaluationRepository _evaluationRepository = EvaluationRepository();
+
 
   @override
   void initState() {
     super.initState();
     _loadUserRole();
-    _eventsFuture = _eventRepository.fetchAllEvents(); // Fetch all events
+    _eventsFuture = _eventRepository.fetchAllEvents();
+    _achievementsFuture = _achievementsRepository.fetchAllAchievements();
+    _evaluationsFuture = _evaluationRepository.fetchAllEvaluations();
   }
 
   Future<void> _loadUserRole() async {
@@ -44,9 +57,9 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final List<Widget> _pages = [
-      HomeScreenContent(eventsFuture: _eventsFuture),
-      Center(child: Text("Achievements Page")),
-      Center(child: Text("Evaluation Page")),
+      EventScreen(eventsFuture: _eventsFuture),
+      AchievementScreen(achievementsFuture: _achievementsFuture),
+      EvaluationScreen(evaluationFuture: _evaluationsFuture),
       CalendarPage(isDirector: true),
       Center(child: Text("Notifications Page")),
       Center(child: Text("Profile Page")),

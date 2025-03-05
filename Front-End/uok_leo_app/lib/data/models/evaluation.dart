@@ -4,6 +4,7 @@ class Evaluation {
   final String description;
   final String content;
   final String featuredImage;
+  final String month;
 
   Evaluation({
     required this.id,
@@ -11,6 +12,7 @@ class Evaluation {
     required this.description,
     required this.content,
     required this.featuredImage,
+    required this.month,
   });
 
   factory Evaluation.fromJson(Map<String, dynamic> json) {
@@ -20,6 +22,7 @@ class Evaluation {
       description: json['description'],
       content: json['content'],
       featuredImage: json['featuredImage'],
+      month: json['month'],
     );
   }
 }
