@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uok_leo_app/widgets/achievement_card.dart';
-import '../data/models/achievement.dart';
+import '../../data/models/achievement.dart';
 
 class AchievementScreen extends StatelessWidget {
   final Future<List<Achievement>> achievementsFuture;

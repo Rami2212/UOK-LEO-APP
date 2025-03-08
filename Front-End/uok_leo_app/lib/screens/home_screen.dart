@@ -3,8 +3,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uok_leo_app/data/models/profile_screen.dart';
 import 'package:uok_leo_app/data/repositories/evaluation_repository.dart';
 import 'package:uok_leo_app/data/repositories/event_repository.dart';
-import 'package:uok_leo_app/screens/achievement_screen.dart';
-import 'package:uok_leo_app/screens/evaluation_screen.dart';
+import 'package:uok_leo_app/screens/achievement/achievement_screen.dart';
+import 'package:uok_leo_app/screens/evaluation/evaluation_screen.dart';
 import 'package:uok_leo_app/screens/notifications_screen.dart';
 import '../data/models/achievement.dart';
 import '../data/models/evaluation.dart';
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       EventScreen(eventsFuture: _eventsFuture),
       AchievementScreen(achievementsFuture: _achievementsFuture),
       EvaluationScreen(evaluationFuture: _evaluationsFuture),
-      CalendarPage(isDirector: _isDirector!, isAdmin: _isAdmin!),
+      CalendarPage(isDirector: true, isAdmin: true),
       NotificationScreen(),
       ProfileScreen(),
     ];
