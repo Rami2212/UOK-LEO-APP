@@ -36,7 +36,7 @@ class EventScreen extends StatelessWidget {
                 imageUrl: events[index].featuredImage,
                 title: events[index].name,
                 date: events[index].date,
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.", // Placeholder
+                description: events[index].description,
               );
             },
           );

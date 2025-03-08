@@ -22,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
   bool? _isDirector;
+  bool? _isAdmin;
   late Future<List<Event>> _eventsFuture;
   late Future<List<Achievement>> _achievementsFuture;
   late Future<List<Evaluation>> _evaluationsFuture;
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       _isDirector = prefs.getString('role') == 'director';
+      _isAdmin = prefs.getString('role') == 'admin';
     });
   }
 
@@ -62,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
       EventScreen(eventsFuture: _eventsFuture),
       AchievementScreen(achievementsFuture: _achievementsFuture),
       EvaluationScreen(evaluationFuture: _evaluationsFuture),
-      CalendarPage(isDirector: true),
+      CalendarPage(isDirector: _isDirector!, isAdmin: _isAdmin!),
       NotificationScreen(),
       ProfileScreen(),
     ];
