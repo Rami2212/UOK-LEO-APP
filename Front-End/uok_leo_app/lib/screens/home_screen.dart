@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uok_leo_app/data/models/profile_screen.dart';
+import 'package:uok_leo_app/screens/profile/profile_screen.dart';
 import 'package:uok_leo_app/data/repositories/evaluation_repository.dart';
 import 'package:uok_leo_app/data/repositories/event_repository.dart';
 import 'package:uok_leo_app/screens/achievement/achievement_screen.dart';
