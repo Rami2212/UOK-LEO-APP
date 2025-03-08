@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data/models/user.dart';
-import '../data/repositories/user_repository.dart';
+import '../../data/models/user.dart';
+import '../../data/repositories/user_repository.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User user;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data/models/event.dart';
-import '../data/repositories/event_repository.dart';
+import '../../data/models/event.dart';
+import '../../data/repositories/event_repository.dart';
 
 class EventDetailsScreen extends StatefulWidget {
   final String eventId;

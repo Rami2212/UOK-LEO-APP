@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/event_details_screen.dart';
+import '../screens/event/event_details_screen.dart';
 import '../screens/event/update_event_screen.dart';
 import '../data/repositories/event_repository.dart';
 

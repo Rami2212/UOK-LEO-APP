@@ -6,6 +6,7 @@ import 'package:uok_leo_app/data/repositories/event_repository.dart';
 import 'package:uok_leo_app/screens/achievement/achievement_screen.dart';
 import 'package:uok_leo_app/screens/evaluation/evaluation_screen.dart';
 import 'package:uok_leo_app/screens/notifications_screen.dart';
+import 'package:uok_leo_app/screens/profile/profile_screen_admin.dart';
 import '../data/models/achievement.dart';
 import '../data/models/evaluation.dart';
 import '../data/models/event.dart';
@@ -66,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
       EvaluationScreen(evaluationsFuture: _evaluationsFuture),
       CalendarPage(isDirector: true, isAdmin: true),
       NotificationScreen(),
-      ProfileScreen(),
+      _isAdmin! ? ProfileScreenAdmin() : ProfileScreen(),
     ];
 
     return Scaffold(

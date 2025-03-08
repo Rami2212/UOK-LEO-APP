@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../data/models/event.dart';
 import '../data/repositories/event_repository.dart';
-import '../screens/event_details_screen.dart';
+import '../screens/event/event_details_screen.dart';
 import '../screens/book_date_screen.dart';
 
 class CalendarWidget extends StatefulWidget {
