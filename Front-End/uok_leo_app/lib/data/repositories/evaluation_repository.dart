@@ -5,6 +5,7 @@ import '../models/evaluation.dart';
 class EvaluationRepository {
   final String baseUrl = "https://example.com/api";
 
+  // Fetch all evaluations
   Future<List<Evaluation>> fetchAllEvaluations() async {
     final response = await http.get(Uri.parse("$baseUrl/evaluations"));
 
@@ -16,13 +17,43 @@ class EvaluationRepository {
     }
   }
 
-  // Future<Event> fetchEventDetails(String eventId) async {
-  //   final response = await http.get(Uri.parse("$baseUrl/events/$eventId"));
-  //
-  //   if (response.statusCode == 200) {
-  //     return Event.fromJson(jsonDecode(response.body));
-  //   } else {
-  //     throw Exception("Failed to load event details");
-  //   }
-  // }
+  // Fetch details of a single evaluation
+  Future<Evaluation> fetchEvaluationDetails(String evaluationId) async {
+    final response = await http.get(Uri.parse("$baseUrl/evaluations/$evaluationId"));
+
+    if (response.statusCode == 200) {
+      return Evaluation.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to load evaluation details");
+    }
+  }
+
+  // Add a new evaluation
+  Future<bool> addEvaluation(Evaluation evaluation) async {
+    final response = await http.post(
+      Uri.parse("$baseUrl/evaluations"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(evaluation.toJson()),
+    );
+
+    return response.statusCode == 201;
+  }
+
+  // Update an existing evaluation
+  Future<bool> updateEvaluation(Evaluation evaluation) async {
+    final response = await http.put(
+      Uri.parse("$baseUrl/evaluations/${evaluation.id}"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(evaluation.toJson()),
+    );
+
+    return response.statusCode == 200;
+  }
+
+  // Delete an evaluation
+  Future<bool> deleteEvaluation(String evaluationId) async {
+    final response = await http.delete(Uri.parse("$baseUrl/evaluations/$evaluationId"));
+
+    return response.statusCode == 200;
+  }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uok_leo_app/widgets/evaluation_card.dart';
-import '../data/models/evaluation.dart';
+import '../../data/models/evaluation.dart';
 
 class EvaluationScreen extends StatelessWidget {
   final Future<List<Evaluation>> evaluationFuture;
