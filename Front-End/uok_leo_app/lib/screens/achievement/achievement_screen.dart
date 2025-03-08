@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:uok_leo_app/widgets/achievement_card.dart';
-import '../../data/models/achievement.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uok_leo_app/data/models/achievement.dart';
+import 'package:uok_leo_app/widgets/achievement_card.dart';  // You can create an AchievementCard widget similarly to the EventCard
+import 'package:uok_leo_app/screens/achievement/add_achievement_screen.dart';
 
-class AchievementScreen extends StatelessWidget {
+class AchievementScreen extends StatefulWidget {
   final Future<List<Achievement>> achievementsFuture;
 
   AchievementScreen({required this.achievementsFuture});
+
+  @override
+  _AchievementScreenState createState() => _AchievementScreenState();
+}
+
+class _AchievementScreenState extends State<AchievementScreen> {
+  String userRole = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserRole();
+  }
+
+  Future<void> _getUserRole() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userRole = prefs.getString('user_role') ?? 'member';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +38,7 @@ class AchievementScreen extends StatelessWidget {
         elevation: 0,
       ),
       body: FutureBuilder<List<Achievement>>(
-        future: achievementsFuture,
+        future: widget.achievementsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -32,15 +54,28 @@ class AchievementScreen extends StatelessWidget {
             itemCount: achievements.length,
             itemBuilder: (context, index) {
               return AchievementCard(
-                id: achievements[index].id,
-                imageUrl: achievements[index].featuredImage,
+                achievementId: achievements[index].id,
                 name: achievements[index].name,
                 description: achievements[index].description,
+                imageUrl: achievements[index].featuredImage,
+                userRole: userRole,
               );
             },
           );
         },
       ),
+      floatingActionButton: userRole == 'admin'
+          ? FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddAchievementScreen()),
+          );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.blue,
+      )
+          : null,
     );
   }
 }

@@ -25,7 +25,7 @@ class _EventScreenState extends State<EventScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('user_role') ?? 'member'; // Default to member
+      userRole = prefs.getString('user_role') ?? 'member';
     });
   }
 
@@ -59,7 +59,7 @@ class _EventScreenState extends State<EventScreen> {
                 title: events[index].name,
                 date: events[index].date,
                 description: events[index].description,
-                userRole: userRole, // Pass userRole to EventCard
+                userRole: userRole,
               );
             },
           );

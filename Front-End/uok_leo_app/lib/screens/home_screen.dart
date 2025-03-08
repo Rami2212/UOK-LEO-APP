@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<Widget> _pages = [
       EventScreen(eventsFuture: _eventsFuture),
       AchievementScreen(achievementsFuture: _achievementsFuture),
-      EvaluationScreen(evaluationFuture: _evaluationsFuture),
+      EvaluationScreen(evaluationsFuture: _evaluationsFuture),
       CalendarPage(isDirector: true, isAdmin: true),
       NotificationScreen(),
       ProfileScreen(),
