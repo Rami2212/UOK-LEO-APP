@@ -11,7 +11,7 @@ import '../data/models/evaluation.dart';
 import '../data/models/event.dart';
 import '../data/repositories/achievement_repository.dart';
 import '../screens/calendar_screen.dart';
-import '../screens/event_screen.dart';
+import 'event/event_screen.dart';
 import '../widgets/bottom_nav.dart';
 
 class HomeScreen extends StatefulWidget {
