@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
+import '../screens/evaluation/update_evaluation_screen.dart';
+import '../data/repositories/evaluation_repository.dart';
 
 class EvaluationCard extends StatelessWidget {
-  final String id;
+  final String evaluationId;
   final String imageUrl;
   final String name;
   final String description;
   final String month;
+  final String userRole;
+  final EvaluationRepository evaluationRepository = EvaluationRepository();
 
   EvaluationCard({
-    required this.id,
-    required this.imageUrl,
+    required this.evaluationId,
     required this.name,
+    required this.imageUrl,
     required this.description,
     required this.month,
+    required this.userRole,
   });
+
+  void _deleteEvaluation(BuildContext context) async {
+    bool success = await evaluationRepository.deleteEvaluation(evaluationId);
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Evaluation deleted successfully")));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete evaluation")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +52,32 @@ class EvaluationCard extends StatelessWidget {
                 Text(month, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
                 SizedBox(height: 5),
                 Text(description, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14)),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (userRole == 'admin')
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.orange),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UpdateEvaluationScreen(evaluationId: evaluationId),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => _deleteEvaluation(context),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
               ],
             ),
           ),

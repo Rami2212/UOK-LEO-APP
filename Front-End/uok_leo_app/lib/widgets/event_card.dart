@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../screens/event_details_screen.dart';
+import '../screens/event/event_details_screen.dart';
+import '../screens/event/update_event_screen.dart';
+import '../data/repositories/event_repository.dart';
 
 class EventCard extends StatelessWidget {
   final String eventId;
@@ -7,6 +9,8 @@ class EventCard extends StatelessWidget {
   final String title;
   final String date;
   final String description;
+  final String userRole;
+  final EventRepository eventRepository = EventRepository();
 
   EventCard({
     required this.eventId,
@@ -14,7 +18,17 @@ class EventCard extends StatelessWidget {
     required this.title,
     required this.date,
     required this.description,
+    required this.userRole,
   });
+
+  void _deleteEvent(BuildContext context) async {
+    bool success = await eventRepository.deleteEvent(eventId);
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Event deleted successfully")));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete event")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +54,39 @@ class EventCard extends StatelessWidget {
                 SizedBox(height: 5),
                 Text(description, maxLines: 2, overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: 14)),
                 SizedBox(height: 10),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EventDetailsScreen(eventId: eventId)),
-                      );
-                    },
-                    child: Text("View Details", style: TextStyle(color: Colors.blue)),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EventDetailsScreen(eventId: eventId)),
+                        );
+                      },
+                      child: Text("View Details", style: TextStyle(color: Colors.blue)),
+                    ),
+                    if (userRole == 'admin')
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.orange),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UpdateEventScreen(eventId: eventId),
+                                ),
+                              );
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => _deleteEvent(context),
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
               ],
             ),

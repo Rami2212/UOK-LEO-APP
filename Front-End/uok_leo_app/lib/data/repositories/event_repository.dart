@@ -39,6 +39,33 @@ class EventRepository {
     }
   }
 
+  Future<bool> addEvent(Event event) async {
+    final response = await http.post(
+      Uri.parse("$baseUrl/events"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(event.toJson()),
+    );
+
+    return response.statusCode == 201;
+  }
+
+  Future<bool> updateEvent(Event event) async {
+    final response = await http.put(
+      Uri.parse("$baseUrl/events/${event.id}"),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(event.toJson()),
+    );
+
+    return response.statusCode == 200;
+  }
+
+  Future<bool> deleteEvent(String eventId) async {
+    final response = await http.delete(Uri.parse("$baseUrl/events/$eventId"));
+
+    return response.statusCode == 200;
+  }
+
+
   Future<BookDateResponse> bookEvent(BookDateRequest request) async {
     final response = await http.post(
       Uri.parse("$baseUrl/bookEvent"),

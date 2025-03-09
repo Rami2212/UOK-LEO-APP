@@ -32,4 +32,10 @@ class UserRepository {
 
     return response.statusCode == 200;
   }
+
+  Future<bool> deleteUserProfile(String userId) async {
+    final response = await http.delete(Uri.parse('$baseUrl/users/$userId'));
+
+    return response.statusCode == 200;
+  }
 }

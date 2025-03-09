@@ -25,6 +25,7 @@ class Event {
     required this.images,
   });
 
+  // Factory method to create an Event from JSON
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
       id: json['id'],
@@ -39,5 +40,22 @@ class Event {
       featuredImage: json['featuredImage'],
       images: List<String>.from(json['images']),
     );
+  }
+
+  // toJson method to convert the Event object back to a JSON map
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'date': date,
+      'time': time,
+      'venue': venue,
+      'avenue': avenue,
+      'description': description,
+      'content': content,
+      'contact': contact,
+      'featuredImage': featuredImage,
+      'images': images,
+    };
   }
 }

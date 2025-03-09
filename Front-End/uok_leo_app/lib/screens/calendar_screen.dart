@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import '../widgets/calendar_widget.dart';
 
 class CalendarPage extends StatelessWidget {
-  final bool isDirector; // Determines the role
+  final bool isDirector;
+  final bool isAdmin;
 
-  CalendarPage({required this.isDirector});
+  CalendarPage({required this.isDirector, required this.isAdmin});
 
   @override
   Widget build(BuildContext context) {

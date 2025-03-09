@@ -9,6 +9,6 @@ class AppRoutes {
     '/login': (context) => const LoginScreen(),
     '/register': (context) => const RegisterScreen(),
     '/home': (context) => HomeScreen(),
-    '/calendar': (context) => CalendarPage(isDirector: false),
+    '/calendar': (context) => CalendarPage(isDirector: false, isAdmin: false),
   };
 }

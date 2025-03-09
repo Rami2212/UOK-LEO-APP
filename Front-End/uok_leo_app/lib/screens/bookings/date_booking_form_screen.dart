@@ -1,48 +1,77 @@
 import 'package:flutter/material.dart';
-import '../data/models/book_date_request.dart';
-import '../data/repositories/event_repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../../data/models/date_booking.dart';
+import '../../data/repositories/date_booking_repository.dart';
 
-class BookDateScreen extends StatefulWidget {
+class DateBookingFormScreen extends StatefulWidget {
   final DateTime selectedDate;
 
-  BookDateScreen({required this.selectedDate});
+  DateBookingFormScreen({required this.selectedDate});
 
   @override
-  _BookDateScreenState createState() => _BookDateScreenState();
+  _DateBookingFormScreenState createState() => _DateBookingFormScreenState();
 }
 
-class _BookDateScreenState extends State<BookDateScreen> {
+class _DateBookingFormScreenState extends State<DateBookingFormScreen> {
   final TextEditingController _eventNameController = TextEditingController();
   final TextEditingController _venueController = TextEditingController();
-  final TextEditingController _organizerController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final EventRepository _eventRepository = EventRepository();
+  final TextEditingController _avenueController = TextEditingController();
+  final TextEditingController _timeController = TextEditingController();
+  final DateBookingRepository _dateBookingRepository = DateBookingRepository();
+  String? _userId;
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _loadUserId();
+  }
+
+  Future<void> _loadUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _userId = prefs.getString('userId');
+    });
+  }
+
   Future<void> _bookDate() async {
+    if (_userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("User ID not found. Please log in again.")),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
-    final request = BookDateRequest(
+    final booking = DateBooking(
+      id: '', // Will be assigned by the backend
+      userId: _userId!,
       eventName: _eventNameController.text,
-      avenue: _venueController.text,
-      organizer: _organizerController.text,
-      phone: _phoneController.text,
-      date: "${widget.selectedDate.toLocal()}".split(' ')[0],
+      venue: _venueController.text,
+      date: widget.selectedDate.toIso8601String(),
+      time: _timeController.text,
+      avenue: _avenueController.text,
+      status: 'pending',
     );
 
     try {
-      final response = await _eventRepository.bookEvent(request);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(response.message)),
-      );
-      if (response.success) {
+      bool success = await _dateBookingRepository.bookDate(booking);
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Booking request submitted successfully!")),
+        );
         Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to book date. Please try again!")),
+        );
       }
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Failed to book date. Please try again!")),
+        SnackBar(content: Text("An error occurred: $error")),
       );
     } finally {
       setState(() {
@@ -79,14 +108,13 @@ class _BookDateScreenState extends State<BookDateScreen> {
             ),
             SizedBox(height: 10),
             TextField(
-              controller: _organizerController,
-              decoration: InputDecoration(labelText: "Organizer Name", border: OutlineInputBorder()),
+              controller: _avenueController,
+              decoration: InputDecoration(labelText: "Avenue", border: OutlineInputBorder()),
             ),
             SizedBox(height: 10),
             TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(labelText: "Phone Number", border: OutlineInputBorder()),
-              keyboardType: TextInputType.phone,
+              controller: _timeController,
+              decoration: InputDecoration(labelText: "Time", border: OutlineInputBorder()),
             ),
             SizedBox(height: 20),
             SizedBox(

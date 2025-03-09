@@ -15,6 +15,7 @@ class Evaluation {
     required this.month,
   });
 
+// Factory method to create an Evaluation from JSON
   factory Evaluation.fromJson(Map<String, dynamic> json) {
     return Evaluation(
       id: json['id'],
@@ -24,5 +25,17 @@ class Evaluation {
       featuredImage: json['featuredImage'],
       month: json['month'],
     );
+  }
+
+// toJson method to convert the Evaluation object back to a JSON map
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'content': content,
+      'featuredImage': featuredImage,
+      'month': month,
+    };
   }
 }

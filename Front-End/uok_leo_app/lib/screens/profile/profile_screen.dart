@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../screens/edit_profile_screen.dart';
-import '../models/user.dart';
-import '../repositories/user_repository.dart';
+import '../../data/models/user.dart';
+import '../../data/repositories/user_repository.dart';
+import 'edit_profile_screen.dart';
+import '../login_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -36,6 +37,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _userProfile = _userRepository.getUserProfile(_userId!);
       });
     }
+  }
+
+  void _deleteProfile() async {
+    bool confirmDelete = await _showDeleteConfirmationDialog();
+    if (!confirmDelete) return;
+
+    if (_userId != null) {
+      bool success = await _userRepository.deleteUserProfile(_userId!);
+      if (success) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.clear(); // Clear stored user data
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profile deleted successfully")));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete profile")));
+      }
+    }
+  }
+
+  Future<bool> _showDeleteConfirmationDialog() async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Delete Profile"),
+        content: Text("Are you sure you want to delete your profile? This action cannot be undone."),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text("Cancel"),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text("Delete", style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    ) ??
+        false;
   }
 
   @override
@@ -76,19 +115,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text("Email: ${user.email}", style: TextStyle(fontSize: 18)),
                 Text("Contact: ${user.contact}", style: TextStyle(fontSize: 18)),
                 SizedBox(height: 20),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      bool updated = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditProfileScreen(user: user),
-                        ),
-                      );
-                      if (updated) _refreshProfile();
-                    },
-                    child: Text("Edit Profile"),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        bool updated = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditProfileScreen(user: user),
+                          ),
+                        );
+                        if (updated) _refreshProfile();
+                      },
+                      child: Text("Edit Profile"),
+                    ),
+                    ElevatedButton(
+                      onPressed: _deleteProfile,
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      child: Text("Delete Profile"),
+                    ),
+                  ],
                 ),
               ],
             ),
