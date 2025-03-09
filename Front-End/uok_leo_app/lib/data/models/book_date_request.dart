@@ -1,14 +1,14 @@
 class BookDateRequest {
   final String eventName;
+  final String venue;
   final String avenue;
-  final String organizer;
   final String phone;
   final String date;
 
   BookDateRequest({
     required this.eventName,
+    required this.venue,
     required this.avenue,
-    required this.organizer,
     required this.phone,
     required this.date,
   });
@@ -16,8 +16,8 @@ class BookDateRequest {
   Map<String, dynamic> toJson() {
     return {
       "eventName": eventName,
-      "avenue": avenue,
-      "organizer": organizer,
+      "avenue": venue,
+      "organizer": avenue,
       "phone": phone,
       "date": date,
     };

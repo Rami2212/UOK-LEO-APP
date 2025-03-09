@@ -3,7 +3,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../data/models/event.dart';
 import '../data/repositories/event_repository.dart';
 import '../screens/event/event_details_screen.dart';
-import '../screens/book_date_screen.dart';
+import '../screens/bookings/date_booking_form_screen.dart';
 
 class CalendarWidget extends StatefulWidget {
   final bool isDirector;
@@ -134,7 +134,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => BookDateScreen(selectedDate: _selectedDay)),
+                        MaterialPageRoute(builder: (context) => DateBookingFormScreen(selectedDate: _selectedDay)),
                       );
                     },
                     style: ElevatedButton.styleFrom(

@@ -32,7 +32,7 @@ class CustomTextField extends StatelessWidget {
 /// Custom Button Widget
 class CustomButton extends StatelessWidget {
   final String text;
-  final VoidCallback? onPressed;  // Make onPressed nullable
+  final VoidCallback? onPressed;
 
   const CustomButton({super.key, required this.text, this.onPressed});
 
@@ -46,7 +46,7 @@ class CustomButton extends StatelessWidget {
         ),
         padding: const EdgeInsets.symmetric(vertical: 14),
       ),
-      onPressed: onPressed,  // It can now accept null
+      onPressed: onPressed,
       child: Text(
         text,
         style: const TextStyle(fontSize: 18, color: Colors.white),

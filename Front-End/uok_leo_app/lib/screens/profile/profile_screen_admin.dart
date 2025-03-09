@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:uok_leo_app/screens/bookings/date_bookings_screen.dart';
 import 'package:uok_leo_app/screens/profile/profile_screen.dart';
 import 'package:uok_leo_app/screens/member/member_screen.dart';
 
@@ -50,6 +51,25 @@ class ProfileScreenAdmin extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MemberScreen()),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                backgroundColor: Colors.blue,
+                textStyle: TextStyle(fontSize: 16),
+              ),
+            ),
+
+            SizedBox(height: 10),
+
+            // Manage Date Bookings Button
+            ElevatedButton.icon(
+              icon: Icon(Icons.calendar_month),
+              label: Text("Manage Date Bookings"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DateBookingsScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
