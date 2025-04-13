@@ -20,14 +20,22 @@ class AchievementRepository {
 
   // Fetch details of a single achievement
   Future<Achievement> fetchAchievementDetails(String achievementId) async {
-    final response = await http.get(Uri.parse("$baseUrl/achivements/$achievementId"));
+    final response = await http.get(Uri.parse('$baseUrl/achievement/$achievementId'));
 
     if (response.statusCode == 200) {
-      final dataList = jsonDecode(response.body)['achivements']['data'];
-      final item = dataList.firstWhere((item) => item['_id'] == achievementId);
-      return Achievement.fromJson(item);
+      final decoded = json.decode(response.body);
+
+      if (decoded['success'] == true &&
+          decoded['achievement'] != null &&
+          decoded['achievement']['data'] != null &&
+          decoded['achievement']['data'] is List &&
+          decoded['achievement']['data'].isNotEmpty) {
+        return Achievement.fromJson(decoded['achievementId']['data'][0]);
+      } else {
+        throw Exception('Achievement data is missing or empty');
+      }
     } else {
-      throw Exception("Failed to load achievement details");
+      throw Exception('Failed to load achievement details: $achievementId\n${response.body}');
     }
   }
 
