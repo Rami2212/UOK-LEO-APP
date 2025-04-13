@@ -1,25 +1,25 @@
 class LoginResponse {
-  final String userId;
-  final String token;
-  final String name;
+  final String userID;
   final String email;
   final String role;
+  final String name;
+  final String token;
 
   LoginResponse({
-    required this.userId,
-    required this.token,
-    required this.name,
+    required this.userID,
     required this.email,
     required this.role,
+    required this.name,
+    required this.token,
   });
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      userId: json['userId'],
-      token: json['token'],
-      name: json['name'],
+      userID: json['userID'],
       email: json['email'],
       role: json['role'],
+      name: json['name'],
+      token: json['token'],
     );
   }
 }

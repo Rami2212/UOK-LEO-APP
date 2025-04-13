@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/notification.dart';
 
 class NotificationRepository {
-  final String baseUrl = "https://your-api.com/notifications";
+  final String baseUrl = "http://localhost:3000/api/notifications";
 
   Future<List<Notifications>> fetchNotifications(String userId) async {
     final response = await http.get(Uri.parse('$baseUrl?userId=$userId'));

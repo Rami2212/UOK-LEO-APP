@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../data/models/user.dart';
 import '../../data/repositories/user_repository.dart';
 
@@ -13,13 +14,21 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+
   late TextEditingController _nameController;
-  late TextEditingController _roleController;
-  late TextEditingController _avenueController;
-  late TextEditingController _dobController;
+  late TextEditingController _lastNameController;
   late TextEditingController _emailController;
-  late TextEditingController _contactController;
-  late TextEditingController _profileImageController;
+  late TextEditingController _studentIdController;
+  late TextEditingController _facultyController;
+  late TextEditingController _departmentController;
+  late TextEditingController _mobileNumberController;
+  late TextEditingController _dobController;
+
+  String? _selectedRole;
+  String? _selectedAvenue;
+
+  final List<String> _roles = ['Member', 'Director'];
+  final List<String> _avenues = ['Education', 'Environment', 'Health', 'Peace'];
 
   final UserRepository _userRepository = UserRepository();
 
@@ -27,48 +36,68 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.user.name);
-    _roleController = TextEditingController(text: widget.user.role);
-    _avenueController = TextEditingController(text: widget.user.avenue);
-    _dobController = TextEditingController(text: widget.user.dob);
+    _lastNameController = TextEditingController(text: widget.user.lastName);
     _emailController = TextEditingController(text: widget.user.email);
-    _contactController = TextEditingController(text: widget.user.contact);
-    _profileImageController = TextEditingController(text: widget.user.profileImage);
+    _studentIdController = TextEditingController(text: widget.user.studentId);
+    _facultyController = TextEditingController(text: widget.user.faculty);
+    _departmentController = TextEditingController(text: widget.user.department);
+    _mobileNumberController = TextEditingController(text: widget.user.mobileNumber);
+    _dobController = TextEditingController(text: widget.user.dob);
+    _selectedRole = widget.user.role;
+    _selectedAvenue = widget.user.avenue;
   }
 
   @override
   void dispose() {
     _nameController.dispose();
-    _roleController.dispose();
-    _avenueController.dispose();
-    _dobController.dispose();
+    _lastNameController.dispose();
     _emailController.dispose();
-    _contactController.dispose();
-    _profileImageController.dispose();
+    _studentIdController.dispose();
+    _facultyController.dispose();
+    _departmentController.dispose();
+    _mobileNumberController.dispose();
+    _dobController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickDob() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.tryParse(widget.user.dob) ?? DateTime(2000),
+      firstDate: DateTime(1950),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      _dobController.text = DateFormat('yyyy-MM-dd').format(picked);
+    }
   }
 
   Future<void> _updateProfile() async {
     if (_formKey.currentState!.validate()) {
       User updatedUser = User(
         id: widget.user.id,
-        name: _nameController.text,
-        role: _roleController.text,
-        avenue: _avenueController.text,
-        dob: _dobController.text,
-        email: _emailController.text,
-        contact: _contactController.text,
-        profileImage: _profileImageController.text,
+        name: _nameController.text.trim(),
+        lastName: _lastNameController.text.trim(),
+        email: _emailController.text.trim(),
+        studentId: _studentIdController.text.trim(),
+        faculty: _facultyController.text.trim(),
+        department: _departmentController.text.trim(),
+        mobileNumber: _mobileNumberController.text.trim(),
+        dob: _dobController.text.trim(),
+        avenue: _selectedAvenue ?? '',
+        role: _selectedRole ?? '',
+        password: widget.user.password, // Keep existing password
       );
 
       bool success = await _userRepository.updateUserProfile(updatedUser);
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Profile Updated Successfully!")),
+          const SnackBar(content: Text("Profile Updated Successfully!")),
         );
-        Navigator.pop(context, true); // Return true to indicate successful update
+        Navigator.pop(context, true);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Failed to update profile")),
+          const SnackBar(content: Text("Failed to update profile")),
         );
       }
     }
@@ -77,24 +106,77 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Edit Profile")),
+      appBar: AppBar(title: const Text("Edit Profile")),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
+          child: ListView(
             children: [
-              TextFormField(controller: _nameController, decoration: InputDecoration(labelText: "Name")),
-              TextFormField(controller: _roleController, decoration: InputDecoration(labelText: "Role")),
-              TextFormField(controller: _avenueController, decoration: InputDecoration(labelText: "Avenue")),
-              TextFormField(controller: _dobController, decoration: InputDecoration(labelText: "DOB")),
-              TextFormField(controller: _emailController, decoration: InputDecoration(labelText: "Email")),
-              TextFormField(controller: _contactController, decoration: InputDecoration(labelText: "Contact")),
-              TextFormField(controller: _profileImageController, decoration: InputDecoration(labelText: "Profile Image URL")),
-              SizedBox(height: 20),
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: "First Name"),
+              ),
+              TextFormField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(labelText: "Last Name"),
+              ),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(labelText: "Email"),
+              ),
+              TextFormField(
+                controller: _studentIdController,
+                decoration: const InputDecoration(labelText: "Student ID"),
+              ),
+              TextFormField(
+                controller: _facultyController,
+                decoration: const InputDecoration(labelText: "Faculty"),
+              ),
+              TextFormField(
+                controller: _departmentController,
+                decoration: const InputDecoration(labelText: "Department"),
+              ),
+              TextFormField(
+                controller: _mobileNumberController,
+                decoration: const InputDecoration(labelText: "Mobile Number"),
+              ),
+              GestureDetector(
+                onTap: _pickDob,
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    controller: _dobController,
+                    decoration: const InputDecoration(labelText: "Date of Birth"),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                value: _selectedAvenue,
+                decoration: const InputDecoration(labelText: "Avenue"),
+                items: _avenues.map((avenue) {
+                  return DropdownMenuItem<String>(
+                    value: avenue,
+                    child: Text(avenue),
+                  );
+                }).toList(),
+                onChanged: (val) => setState(() => _selectedAvenue = val),
+              ),
+              DropdownButtonFormField<String>(
+                value: _selectedRole,
+                decoration: const InputDecoration(labelText: "Role"),
+                items: _roles.map((role) {
+                  return DropdownMenuItem<String>(
+                    value: role,
+                    child: Text(role),
+                  );
+                }).toList(),
+                onChanged: (val) => setState(() => _selectedRole = val),
+              ),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _updateProfile,
-                child: Text("Save Changes"),
+                child: const Text("Save Changes"),
               ),
             ],
           ),

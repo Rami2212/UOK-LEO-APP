@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/achievement.dart';
 
 class AchievementRepository {
-  final String baseUrl = "https://example.com/api";
+  final String baseUrl = "http://localhost:3000/api";
 
   // Fetch all achievements
   Future<List<Achievement>> fetchAllAchievements() async {

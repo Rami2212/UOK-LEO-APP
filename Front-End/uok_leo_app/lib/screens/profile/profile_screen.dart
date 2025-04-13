@@ -23,12 +23,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _userId = prefs.getString('userId');
-      if (_userId != null) {
+    _userId = prefs.getString('userId');
+    if (_userId != null) {
+      setState(() {
         _userProfile = _userRepository.getUserProfile(_userId!);
-      }
-    });
+      });
+    }
   }
 
   void _refreshProfile() {
@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       bool success = await _userRepository.deleteUserProfile(_userId!);
       if (success) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.clear(); // Clear stored user data
+        await prefs.clear();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profile deleted successfully")));
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
       } else {
@@ -77,10 +77,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
         false;
   }
 
+  void _logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Profile")),
+      appBar: AppBar(
+        title: Text("Profile"),
+        actions: [
+          IconButton(icon: Icon(Icons.logout), onPressed: _logout),
+        ],
+      ),
       body: _userId == null
           ? Center(child: Text("No user ID found. Please log in again."))
           : FutureBuilder<User>(
@@ -95,8 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
 
           User user = snapshot.data!;
-
-          return Padding(
+          return SingleChildScrollView(
             padding: EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,16 +114,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Center(
                   child: CircleAvatar(
                     radius: 50,
-                    backgroundImage: NetworkImage(user.profileImage),
+                    backgroundImage: NetworkImage(
+                      "https://ui-avatars.com/api/?name=${user.name}+${user.lastName}",
+                    ),
                   ),
                 ),
                 SizedBox(height: 20),
-                Text("Name: ${user.name}", style: TextStyle(fontSize: 18)),
-                Text("Role: ${user.role}", style: TextStyle(fontSize: 18)),
-                Text("Avenue: ${user.avenue}", style: TextStyle(fontSize: 18)),
-                Text("DOB: ${user.dob}", style: TextStyle(fontSize: 18)),
-                Text("Email: ${user.email}", style: TextStyle(fontSize: 18)),
-                Text("Contact: ${user.contact}", style: TextStyle(fontSize: 18)),
+                _buildInfo("Name", "${user.name} ${user.lastName}"),
+                _buildInfo("Role", user.role),
+                _buildInfo("Avenue", user.avenue),
+                _buildInfo("DOB", user.dob),
+                _buildInfo("Email", user.email),
+                _buildInfo("Contact", user.mobileNumber),
+                _buildInfo("Student ID", user.studentId),
+                _buildInfo("Faculty", user.faculty),
+                _buildInfo("Department", user.department),
                 SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -141,6 +156,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildInfo(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6.0),
+      child: Text(
+        "$title: $value",
+        style: TextStyle(fontSize: 16),
       ),
     );
   }

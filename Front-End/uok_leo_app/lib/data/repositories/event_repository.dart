@@ -5,7 +5,7 @@ import '../models/book_date_response.dart';
 import '../models/event.dart';
 
 class EventRepository {
-  final String baseUrl = "https://example.com/api";
+  final String baseUrl = "http://localhost:3000/api";
 
   Future<List<Event>> fetchAllEvents() async {
     final response = await http.get(Uri.parse("$baseUrl/events"));

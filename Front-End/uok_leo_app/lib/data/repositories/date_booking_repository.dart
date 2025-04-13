@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/date_booking.dart';
 
 class DateBookingRepository {
-  final String baseUrl = "https://your-api-url.com";
+  final String baseUrl = "http://localhost:3000/api";
 
   Future<bool> bookDate(DateBooking booking) async {
     final response = await http.post(
