@@ -15,17 +15,40 @@ class DateBookingRepository {
     return response.statusCode == 200;
   }
 
-  // Fetch all date bookings
+  // Get all date bookings
   Future<List<DateBooking>> getDateBookings() async {
     final response = await http.get(Uri.parse('$baseUrl/dateBooking'));
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((json) => DateBooking.fromJson(json)).toList();
+      final decoded = jsonDecode(response.body);
+
+      if (decoded['success'] == true && decoded['bookings'] != null && decoded['bookings']['data'] != null) {
+        List<dynamic> jsonList = decoded['bookings']['data'];
+        return jsonList.map((json) => DateBooking.fromJson(json)).toList();
+      } else {
+        throw Exception('Unexpected response format');
+      }
     } else {
       throw Exception('Failed to load date bookings');
     }
   }
+
+  // Get a single date booking
+  Future<DateBooking> getSingleDateBooking(String bookingId) async {
+    final response = await http.get(Uri.parse('$baseUrl/dateBooking/$bookingId'));
+
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);
+      if (decoded['success'] == true && decoded['booking'] != null) {
+        return DateBooking.fromJson(decoded['booking']);
+      } else {
+        throw Exception('Unexpected response format');
+      }
+    } else {
+      throw Exception('Failed to load date booking');
+    }
+  }
+
 
   // Approve a date booking
   Future<bool> approveDateBooking(String bookingId) async {

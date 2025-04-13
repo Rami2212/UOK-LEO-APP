@@ -21,7 +21,7 @@ class DateBooking {
 
   factory DateBooking.fromJson(Map<String, dynamic> json) {
     return DateBooking(
-      id: json['id'],
+      id: json['_id'],
       userId: json['userId'],
       eventName: json['eventName'],
       venue: json['venue'],
@@ -43,4 +43,5 @@ class DateBooking {
       'status': status,
     };
   }
+
 }
