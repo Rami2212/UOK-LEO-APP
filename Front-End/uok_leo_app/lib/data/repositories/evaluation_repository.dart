@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/evaluation.dart';
 
 class EvaluationRepository {
-  final String baseUrl = "http://localhost:3000/api";
+  final String baseUrl = "http://10.0.2.2:3000/api/v1";
 
   // Fetch all evaluations
   Future<List<Evaluation>> fetchAllEvaluations() async {

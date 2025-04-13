@@ -13,21 +13,21 @@ class Achievement {
     required this.featuredImage,
   });
 
-// Factory method to create an Achievements from JSON
+  // Factory method with null safety and default fallbacks
   factory Achievement.fromJson(Map<String, dynamic> json) {
     return Achievement(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      content: json['content'],
-      featuredImage: json['featuredImage'],
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      content: json['content']?.toString() ?? '',
+      featuredImage: json['featuredImage']?.toString() ?? '',
     );
   }
 
-// toJson method to convert the Achievements object back to a JSON map
+  // toJson method
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      '_id': id,
       'name': name,
       'description': description,
       'content': content,

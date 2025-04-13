@@ -53,16 +53,18 @@ class _EventScreenState extends State<EventScreen> {
           return ListView.builder(
             itemCount: events.length,
             itemBuilder: (context, index) {
+              final event = events[index];
               return EventCard(
-                eventId: events[index].id,
-                imageUrl: events[index].featuredImage,
-                title: events[index].name,
-                date: events[index].date,
-                description: events[index].description,
+                eventId: event.id,
+                imageUrl: event.featuredImage,
+                title: event.name,
+                date: event.date,
+                description: event.description,
                 userRole: userRole,
               );
             },
           );
+
         },
       ),
       floatingActionButton: userRole == 'admin'

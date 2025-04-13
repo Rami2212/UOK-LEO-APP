@@ -64,7 +64,7 @@ class EventCard extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => EventDetailsScreen(eventId: eventId)),
                         );
                       },
-                      child: Text("View Details", style: TextStyle(color: Colors.blue)),
+                      child: Text("View Details", style: TextStyle(color: Colors.orange)),
                     ),
                     if (userRole == 'admin')
                       Row(

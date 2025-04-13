@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../data/models/event.dart';
 import '../../data/repositories/event_repository.dart';
 
@@ -23,17 +24,22 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColor = Colors.orange;
+
     return Scaffold(
-      appBar: AppBar(title: Text("Event Details")),
+      appBar: AppBar(
+        title: const Text("Event Details"),
+        backgroundColor: primaryColor,
+      ),
       body: FutureBuilder<Event>(
         future: _eventFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text("Failed to load event"));
+            return Center(child: Text("Failed to load event\n${snapshot.error}"));
           } else if (!snapshot.hasData) {
-            return Center(child: Text("No event found"));
+            return const Center(child: Text("No event found"));
           }
 
           Event event = snapshot.data!;
@@ -43,24 +49,60 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Featured Image
-                Image.network(event.featuredImage, fit: BoxFit.cover, width: double.infinity, height: 250),
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20),
+                  ),
+                  child: Image.network(
+                    event.featuredImage,
+                    width: double.infinity,
+                    height: 250,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        Image.asset('assets/default-image.jpg', width: double.infinity, height: 250, fit: BoxFit.cover),
+                    loadingBuilder: (context, child, loadingProgress) =>
+                    loadingProgress == null
+                        ? child
+                        : const Center(child: CircularProgressIndicator()),
+                  ),
+                ),
 
                 Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(event.name, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 10),
-                      Text("📅 Date: ${event.date}", style: TextStyle(fontSize: 16)),
-                      Text("🕒 Time: ${event.time}", style: TextStyle(fontSize: 16)),
-                      Text("📍 Venue: ${event.venue}", style: TextStyle(fontSize: 16)),
-                      Text("📞 Contact: ${event.contact}", style: TextStyle(fontSize: 16, color: Colors.blue)),
-                      SizedBox(height: 20),
+                      // Title
+                      Text(
+                        event.name,
+                        style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 20),
 
-                      // Additional Images
-                      Text("Event Images", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 10),
+                      // Info Rows with Icons
+                      infoRow(FontAwesomeIcons.calendar, "Date", event.date, primaryColor),
+                      infoRow(FontAwesomeIcons.clock, "Time", event.time, primaryColor),
+                      infoRow(FontAwesomeIcons.locationDot, "Venue", event.venue, primaryColor),
+                      infoRow(FontAwesomeIcons.road, "Avenue", event.avenue, primaryColor),
+                      infoRow(FontAwesomeIcons.phone, "Contact", event.contact, primaryColor),
+                      const SizedBox(height: 20),
+
+                      // Description
+                      const Text("Description", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      Text(event.description, style: const TextStyle(fontSize: 16)),
+                      const SizedBox(height: 20),
+
+                      // Content
+                      const Text("Content", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      Text(event.content, style: const TextStyle(fontSize: 16)),
+                      const SizedBox(height: 30),
+
+                      // Event Images
+                      const Text("Event Images", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 10),
                       SizedBox(
                         height: 150,
                         child: ListView.builder(
@@ -68,15 +110,27 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                           itemCount: event.images.length,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: EdgeInsets.only(right: 10),
+                              padding: const EdgeInsets.only(right: 10),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(event.images[index], width: 150, height: 150, fit: BoxFit.cover),
+                                borderRadius: BorderRadius.circular(12),
+                                child: Image.network(
+                                  event.images[index],
+                                  width: 150,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Image.asset('assets/default-image.jpg', width: 150, height: 150, fit: BoxFit.cover),
+                                  loadingBuilder: (context, child, loadingProgress) =>
+                                  loadingProgress == null
+                                      ? child
+                                      : const Center(child: CircularProgressIndicator()),
+                                ),
                               ),
                             );
                           },
                         ),
                       ),
+                      const SizedBox(height: 30),
                     ],
                   ),
                 ),
@@ -84,6 +138,29 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget infoRow(IconData icon, String label, String value, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 20),
+          const SizedBox(width: 10),
+          Text(
+            "$label: ",
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Flexible(
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 16),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

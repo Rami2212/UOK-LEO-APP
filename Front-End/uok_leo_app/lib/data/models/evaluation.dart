@@ -15,22 +15,22 @@ class Evaluation {
     required this.month,
   });
 
-// Factory method to create an Evaluation from JSON
+  // Factory method with null-safety and type casting
   factory Evaluation.fromJson(Map<String, dynamic> json) {
     return Evaluation(
-      id: json['id'],
-      name: json['name'],
-      description: json['description'],
-      content: json['content'],
-      featuredImage: json['featuredImage'],
-      month: json['month'],
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      content: json['content']?.toString() ?? '',
+      featuredImage: json['featuredImage']?.toString() ?? '',
+      month: json['month']?.toString() ?? '',
     );
   }
 
-// toJson method to convert the Evaluation object back to a JSON map
+  // toJson method
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      '_id': id,
       'name': name,
       'description': description,
       'content': content,
