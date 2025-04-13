@@ -18,39 +18,38 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   DateTime _selectedDay = DateTime.now();
   DateTime _focusedDay = DateTime.now();
   EventRepository eventRepository = EventRepository();
-  Event? _event;
+  List<Event> _events = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _fetchEvent();
+    _fetchEvents();
   }
 
-  void _fetchEvent() async {
+  void _fetchEvents() async {
     setState(() => _isLoading = true);
     try {
-      List<Event> events = await eventRepository.fetchEventsByDate(
-          "${_selectedDay.year}-${_selectedDay.month}-${_selectedDay.day}");
-
+      String date = "${_selectedDay.year.toString().padLeft(4, '0')}-${_selectedDay.month.toString().padLeft(2, '0')}-${_selectedDay.day.toString().padLeft(2, '0')}";
+      List<Event> events = await eventRepository.fetchEventsByDate(date);
       setState(() {
-        _event = events.isNotEmpty ? events.first : null;
+        _events = events;
         _isLoading = false;
       });
     } catch (e) {
       setState(() {
         _isLoading = false;
+        _events = [];
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.all(16.0),
       child: Column(
         children: [
-          // Calendar UI
           TableCalendar(
             focusedDay: _focusedDay,
             firstDay: DateTime(2020),
@@ -62,7 +61,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 _selectedDay = selectedDay;
                 _focusedDay = focusedDay;
               });
-              _fetchEvent(); // Fetch event on date selection
+              _fetchEvents();
             },
             headerStyle: HeaderStyle(
               formatButtonVisible: false,
@@ -77,75 +76,72 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
           SizedBox(height: 20),
 
-          // Event Details Container
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 2),
-              ],
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "${_selectedDay.day}-${_selectedDay.month}-${_selectedDay.year}",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orange),
+          Text(
+            "${_selectedDay.day}-${_selectedDay.month}-${_selectedDay.year}",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orange),
+          ),
+
+          SizedBox(height: 12),
+
+          _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : _events.isEmpty
+              ? Text("No events on this date", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey))
+              : ListView.builder(
+            shrinkWrap: true,
+            physics: ScrollPhysics(),
+            itemCount: _events.length,
+            itemBuilder: (context, index) {
+              final event = _events[index];
+              return Container(
+                margin: EdgeInsets.only(bottom: 12),
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  boxShadow: [
+                    BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 2),
+                  ],
                 ),
-
-                SizedBox(height: 8),
-
-                // Event Details
-                _isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : (_event != null
-                    ? Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      child: Text(_event!.name, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    Text(event.name, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EventDetailsScreen(eventId: event.id)),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      ),
+                      child: Center(child: Text("View Event", style: TextStyle(color: Colors.white))),
                     ),
                   ],
-                )
-                    : Text("No events on this date", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.grey))),
-
-                SizedBox(height: 10),
-
-                // View Event Button
-                if (_event != null)
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => EventDetailsScreen(eventId: _event!.id)),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                    child: Center(child: Text("View Event", style: TextStyle(color: Colors.white))),
-                  ),
-
-                // Book Date Button
-                if (widget.isDirector)
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => DateBookingFormScreen(selectedDate: _selectedDay)),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
-                    child: Center(child: Text("Book Date", style: TextStyle(color: Colors.white))),
-                  ),
-              ],
-            ),
+                ),
+              );
+            },
           ),
+
+          // Book Date Button (shown only if director)
+          if (widget.isDirector)
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DateBookingFormScreen(selectedDate: _selectedDay)),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              child: Center(child: Text("Book Date", style: TextStyle(color: Colors.white))),
+            ),
         ],
       ),
     );

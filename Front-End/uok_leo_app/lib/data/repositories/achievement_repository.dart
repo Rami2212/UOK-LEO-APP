@@ -6,13 +6,12 @@ class AchievementRepository {
   final String baseUrl = "http://10.0.2.2:3000/api/v1";
 
   // Fetch all achievements
-    Future<List<Achievement>> fetchAllAchievements() async {
+  Future<List<Achievement>> fetchAllAchievements() async {
     final response = await http.get(Uri.parse("$baseUrl/achivements"));
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body)['achivements']['data'];  // Adjust to handle nested data
-      List<Achievement> achievements = List<Achievement>.from(data.map((item) => Achievement.fromJson(item)));
-      return achievements;
+      final data = jsonDecode(response.body)['achivements']['data'];
+      return List<Achievement>.from(data.map((item) => Achievement.fromJson(item)));
     } else {
       throw Exception("Failed to load achievements");
     }
@@ -20,17 +19,17 @@ class AchievementRepository {
 
   // Fetch details of a single achievement
   Future<Achievement> fetchAchievementDetails(String achievementId) async {
-    final response = await http.get(Uri.parse('$baseUrl/achievement/$achievementId'));
+    final response = await http.get(Uri.parse('$baseUrl/achivements/$achievementId'));
 
     if (response.statusCode == 200) {
       final decoded = json.decode(response.body);
 
       if (decoded['success'] == true &&
-          decoded['achievement'] != null &&
-          decoded['achievement']['data'] != null &&
-          decoded['achievement']['data'] is List &&
-          decoded['achievement']['data'].isNotEmpty) {
-        return Achievement.fromJson(decoded['achievementId']['data'][0]);
+          decoded['achivement'] != null &&
+          decoded['achivement']['data'] != null &&
+          decoded['achivement']['data'] is List &&
+          decoded['achivement']['data'].isNotEmpty) {
+        return Achievement.fromJson(decoded['achivement']['data'][0]);
       } else {
         throw Exception('Achievement data is missing or empty');
       }
@@ -39,17 +38,29 @@ class AchievementRepository {
     }
   }
 
-
   // Add a new achievement
   Future<bool> addAchievement(Achievement achievement) async {
     final response = await http.post(
-      Uri.parse("$baseUrl/achivements"),
+      Uri.parse("$baseUrl/achivements/save"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(achievement.toJson()),
     );
 
-    return response.statusCode == 201;
+    print(jsonEncode(achievement.toJson()));
+
+    if (response.statusCode == 200) {
+      final json = jsonDecode(response.body);
+
+      if (json['success'] == true &&
+          json['achivement'] != null &&
+          json['achivement']['success'] == true) {
+        return true;
+      }
+    }
+
+    return false;
   }
+
 
   // Update an existing achievement
   Future<bool> updateAchievement(Achievement achievement) async {

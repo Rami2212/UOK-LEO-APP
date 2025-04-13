@@ -25,7 +25,7 @@ class _AchievementScreenState extends State<AchievementScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('user_role') ?? 'member';
+      userRole = prefs.getString('role') ?? 'member';
     });
   }
 
@@ -64,7 +64,7 @@ class _AchievementScreenState extends State<AchievementScreen> {
           );
         },
       ),
-      floatingActionButton: userRole == 'admin'
+      floatingActionButton: userRole == 'Admin'
           ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -72,8 +72,11 @@ class _AchievementScreenState extends State<AchievementScreen> {
             MaterialPageRoute(builder: (context) => AddAchievementScreen()),
           );
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        child: Icon(
+            Icons.add,
+            color: Colors.white,
+        ),
+        backgroundColor: Colors.orange,
       )
           : null,
     );

@@ -89,7 +89,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         password: widget.user.password, // Keep existing password
       );
 
-      bool success = await _userRepository.updateUserProfile(updatedUser);
+      bool success = await _userRepository.updateUserProfile(widget.user.id, updatedUser);
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Profile Updated Successfully!")),

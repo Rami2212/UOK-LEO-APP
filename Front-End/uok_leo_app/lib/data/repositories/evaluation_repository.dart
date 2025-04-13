@@ -10,8 +10,16 @@ class EvaluationRepository {
     final response = await http.get(Uri.parse("$baseUrl/evaluations"));
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(response.body);
-      return jsonList.map((json) => Evaluation.fromJson(json)).toList();
+      final decoded = jsonDecode(response.body);
+
+      if (decoded['success'] == true &&
+          decoded['evaluations'] != null &&
+          decoded['evaluations']['data'] is List) {
+        List<dynamic> dataList = decoded['evaluations']['data'];
+        return dataList.map((e) => Evaluation.fromJson(e)).toList();
+      } else {
+        throw Exception("Evaluation data is missing or invalid");
+      }
     } else {
       throw Exception("Failed to load evaluations");
     }
@@ -19,24 +27,32 @@ class EvaluationRepository {
 
   // Fetch details of a single evaluation
   Future<Evaluation> fetchEvaluationDetails(String evaluationId) async {
-    final response = await http.get(Uri.parse("$baseUrl/evaluations/$evaluationId"));
+    final response = await http.get(Uri.parse('$baseUrl/evaluations/$evaluationId'));
 
     if (response.statusCode == 200) {
-      return Evaluation.fromJson(jsonDecode(response.body));
+      final decoded = json.decode(response.body);
+
+      if (decoded['success'] == true &&
+          decoded['evaluation'] != null &&
+          decoded['evaluation']['data'] != null) {
+        return Evaluation.fromJson(decoded['evaluation']['data']);
+      } else {
+        throw Exception('Evaluation data is missing or empty');
+      }
     } else {
-      throw Exception("Failed to load evaluation details");
+      throw Exception('Failed to load evaluation details: $evaluationId\n${response.body}');
     }
   }
 
   // Add a new evaluation
   Future<bool> addEvaluation(Evaluation evaluation) async {
     final response = await http.post(
-      Uri.parse("$baseUrl/evaluations"),
+      Uri.parse("$baseUrl/evaluations/save"),
       headers: {"Content-Type": "application/json"},
       body: jsonEncode(evaluation.toJson()),
     );
 
-    return response.statusCode == 201;
+    return response.statusCode == 200;
   }
 
   // Update an existing evaluation

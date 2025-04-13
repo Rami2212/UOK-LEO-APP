@@ -25,7 +25,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('user_role') ?? 'member';
+      userRole = prefs.getString('role') ?? 'member';
     });
   }
 
@@ -65,7 +65,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
           );
         },
       ),
-      floatingActionButton: userRole == 'admin'
+      floatingActionButton: userRole == 'Admin'
           ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -73,8 +73,11 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
             MaterialPageRoute(builder: (context) => AddEvaluationScreen()),
           );
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.orange,
       )
           : null,
     );

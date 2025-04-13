@@ -52,7 +52,7 @@ class AchievementCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    if (userRole == 'admin')
+                    if (userRole == 'Admin')
                       Row(
                         children: [
                           IconButton(

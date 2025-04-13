@@ -25,7 +25,7 @@ class _EventScreenState extends State<EventScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('user_role') ?? 'member';
+      userRole = prefs.getString('role') ?? 'member';
     });
   }
 
@@ -67,7 +67,7 @@ class _EventScreenState extends State<EventScreen> {
 
         },
       ),
-      floatingActionButton: userRole == 'admin'
+      floatingActionButton: userRole == 'Admin'
           ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -75,8 +75,11 @@ class _EventScreenState extends State<EventScreen> {
             MaterialPageRoute(builder: (context) => AddEventScreen()),
           );
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.orange,
       )
           : null,
     );

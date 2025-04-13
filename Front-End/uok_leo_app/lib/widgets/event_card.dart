@@ -66,7 +66,7 @@ class EventCard extends StatelessWidget {
                       },
                       child: Text("View Details", style: TextStyle(color: Colors.orange)),
                     ),
-                    if (userRole == 'admin')
+                    if (userRole == 'Admin')
                       Row(
                         children: [
                           IconButton(

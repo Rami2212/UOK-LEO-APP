@@ -11,6 +11,7 @@ class User {
   final String faculty;
   final String department;
   final String mobileNumber;
+  final String profileImage;
 
   User({
     required this.id,
@@ -25,6 +26,7 @@ class User {
     required this.faculty,
     required this.department,
     required this.mobileNumber,
+    this.profileImage = '',
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class User {
       faculty: json['faculty'],
       department: json['department'],
       mobileNumber: json['mobileNumber'],
+      profileImage: json['profileImage'] ?? '', // Default to empty string if null
     );
   }
 
@@ -58,6 +61,7 @@ class User {
       'faculty': faculty,
       'department': department,
       'mobileNumber': mobileNumber,
+      'profileImage': profileImage,
     };
   }
 }

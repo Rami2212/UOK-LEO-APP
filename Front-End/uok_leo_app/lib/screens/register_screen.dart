@@ -22,7 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  final List<String> _roles = ['Member', 'Director'];
+  final List<String> _roles = ['Member', 'Director', 'Admin'];
   final List<String> _avenues = ['Education', 'Environment', 'Health', 'Peace'];
   final List<String> _faculties = ['Science', 'Arts', 'Commerce', 'Management'];
 

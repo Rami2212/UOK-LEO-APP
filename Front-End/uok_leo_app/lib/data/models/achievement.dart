@@ -27,7 +27,6 @@ class Achievement {
   // toJson method
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
       'name': name,
       'description': description,
       'content': content,

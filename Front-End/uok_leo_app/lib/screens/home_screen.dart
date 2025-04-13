@@ -44,8 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _loadUserRole() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      _isDirector = prefs.getString('role') == 'director';
-      _isAdmin = prefs.getString('role') == 'admin';
+      _isDirector = prefs.getString('role') == 'Director';
+      _isAdmin = prefs.getString('role') == 'Admin';
     });
   }
 

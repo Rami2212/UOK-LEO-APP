@@ -5,10 +5,10 @@ import '../../data/repositories/achievement_repository.dart';
 class UpdateAchievementScreen extends StatefulWidget {
   final String achievementId;
 
-  UpdateAchievementScreen({required this.achievementId});
+  const UpdateAchievementScreen({required this.achievementId, super.key});
 
   @override
-  _UpdateAchievementScreenState createState() => _UpdateAchievementScreenState();
+  State<UpdateAchievementScreen> createState() => _UpdateAchievementScreenState();
 }
 
 class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
@@ -29,7 +29,6 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
     _loadAchievementData();
   }
 
-  // Fetch achievement details and prefill form
   void _loadAchievementData() async {
     try {
       Achievement achievement = await _achievementRepository.fetchAchievementDetails(widget.achievementId);
@@ -37,21 +36,21 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
         _nameController.text = achievement.name;
         _descriptionController.text = achievement.description;
         _contentController.text = achievement.content;
-        _imageUrls = [achievement.featuredImage];
+        _imageUrls = achievement.featuredImage.isNotEmpty ? [achievement.featuredImage] : [];
         _isLoading = false;
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to load achievement details")));
-      setState(() {
-        _isLoading = false;
-      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to load achievement details")),
+      );
+      setState(() => _isLoading = false);
     }
   }
 
   void _addImageUrl() {
     if (_imageUrlController.text.isNotEmpty) {
       setState(() {
-        _imageUrls.add(_imageUrlController.text);
+        _imageUrls.add(_imageUrlController.text.trim());
         _imageUrlController.clear();
       });
     }
@@ -61,19 +60,23 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
     if (_formKey.currentState!.validate()) {
       Achievement updatedAchievement = Achievement(
         id: widget.achievementId,
-        name: _nameController.text,
-        description: _descriptionController.text,
-        content: _contentController.text,
+        name: _nameController.text.trim(),
+        description: _descriptionController.text.trim(),
+        content: _contentController.text.trim(),
         featuredImage: _imageUrls.isNotEmpty ? _imageUrls[0] : '',
       );
 
       bool success = await _achievementRepository.updateAchievement(updatedAchievement);
 
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Achievement updated successfully")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Achievement updated successfully")),
+        );
         Navigator.pop(context);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to update achievement")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to update achievement")),
+        );
       }
     }
   }
@@ -85,7 +88,7 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -106,9 +109,9 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
                   decoration: InputDecoration(labelText: "Content"),
                   validator: (value) => value!.isEmpty ? "Content is required" : null,
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
-                // Image URL Input
+                // Image URL input
                 TextFormField(
                   controller: _imageUrlController,
                   decoration: InputDecoration(labelText: "Image URL"),
@@ -118,26 +121,25 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
                   child: Text("Add Image"),
                 ),
 
-                // Display added image URLs
-                _imageUrls.isNotEmpty
-                    ? Column(
-                  children: _imageUrls
-                      .map((url) => ListTile(
-                    title: Text(url),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          _imageUrls.remove(url);
-                        });
-                      },
-                    ),
-                  ))
-                      .toList(),
-                )
-                    : Container(),
+                // Show added images
+                if (_imageUrls.isNotEmpty)
+                  Column(
+                    children: _imageUrls.map((url) {
+                      return ListTile(
+                        title: Text(url),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            setState(() {
+                              _imageUrls.remove(url);
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ),
 
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _updateAchievement,
                   child: Text("Update Achievement"),
