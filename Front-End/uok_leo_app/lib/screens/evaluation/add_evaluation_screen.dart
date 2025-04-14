@@ -92,10 +92,10 @@ class _AddEvaluationScreenState extends State<AddEvaluationScreen> {
               TextFormField(
                 controller: _imageController,
                 decoration: const InputDecoration(
-                  labelText: "Featured Image URL",
+                  labelText: "Featured Image ID",
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) => value!.isEmpty ? 'Enter image URL' : null,
+                validator: (value) => value!.isEmpty ? 'Enter image ID' : null,
               ),
               const SizedBox(height: 16),
 

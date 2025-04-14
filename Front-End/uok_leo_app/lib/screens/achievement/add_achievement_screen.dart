@@ -69,13 +69,13 @@ class _AddAchievementScreenState extends State<AddAchievementScreen> {
               showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: const Text('How to get Google Drive image link'),
+                  title: const Text('How to get Google Drive image ID'),
                   content: const Text(
-                    '1. Open your image in Google Drive.\n'
-                        '2. Right-click > Get link.\n'
-                        '3. Set to "Anyone with the link".\n'
-                        '4. Click "Copy link".\n'
-                        '5. Paste the link here.',
+                      '1. Open your image in Google Drive.\n'
+                          '2. Set privacy to "Anyone with the link".\n'
+                          '3. Copy image URL from URL.\n'
+                          '4. Get Image ID from URL.\n'
+                          '5. Paste it here.'
                   ),
                   actions: [
                     TextButton(
@@ -87,7 +87,7 @@ class _AddAchievementScreenState extends State<AddAchievementScreen> {
               );
             },
             child: const Tooltip(
-              message: "Tap for Google Drive image link instructions",
+              message: "Tap for Google Drive image ID instructions",
               child: Icon(Icons.info_outline),
             ),
           )
@@ -110,7 +110,7 @@ class _AddAchievementScreenState extends State<AddAchievementScreen> {
               _buildTextField(_nameController, "Name"),
               _buildTextField(_descriptionController, "Description", maxLines: 2),
               _buildTextField(_contentController, "Content", maxLines: 5),
-              _buildTextField(_featuredImageController, "Featured Image URL", isImageField: true),
+              _buildTextField(_featuredImageController, "Featured Image ID", isImageField: true),
               const SizedBox(height: 16),
               SizedBox(
                 width: double.infinity,

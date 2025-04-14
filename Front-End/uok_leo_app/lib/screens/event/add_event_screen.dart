@@ -26,6 +26,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
   final _featuredImageController = TextEditingController();
   final List<TextEditingController> _imageControllers = [TextEditingController()];
 
+  final List<String> _avenues = ['Education & Literacy',
+    'Environment Conservation',
+    'Healthcare',
+    'Clean Water & Energy Conservation'
+
+  ];
+
+  String? _selectedAvenue;
+
   void _addImageField() {
     setState(() {
       _imageControllers.add(TextEditingController());
@@ -70,7 +79,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         date: _dateController.text,
         time: _timeController.text,
         venue: _venueController.text,
-        avenue: _avenueController.text,
+        avenue: _selectedAvenue ?? '',
         description: _descriptionController.text,
         content: _contentController.text,
         contact: _contactController.text,
@@ -146,13 +155,14 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   showDialog(
                     context: context,
                     builder: (_) => AlertDialog(
-                      title: const Text('Google Drive Image Link Help'),
+                      title: const Text('Google Drive Image ID Help'),
                       content: const Text(
-                          '1. Open your image in Google Drive.\n'
-                              '2. Right-click > Get link.\n'
-                              '3. Set to "Anyone with the link".\n'
-                              '4. Click "Copy link".\n'
-                              '5. Paste here.'),
+                              '1. Open your image in Google Drive.\n'
+                              '2. Set privacy to "Anyone with the link".\n'
+                              '3. Copy image URL from URL.\n'
+                              '4. Get Image ID from URL.\n'
+                              '5. Paste it here.'
+                      ),
                       actions: [
                         TextButton(
                           onPressed: () => Navigator.pop(context),
@@ -190,7 +200,15 @@ class _AddEventScreenState extends State<AddEventScreen> {
               _buildTextField(_dateController, "Date", onTap: _pickDate, readOnly: true),
               _buildTextField(_timeController, "Time", onTap: _pickTime, readOnly: true),
               _buildTextField(_venueController, "Venue"),
-              _buildTextField(_avenueController, "Avenue"),
+              CustomDropdown(
+                hintText: '',
+                items: _avenues,
+                value: _selectedAvenue,
+                onChanged: (val) => setState(() => _selectedAvenue = val),
+              ),
+
+              SizedBox(height: 10,),
+
               _buildTextField(_descriptionController, "Description", maxLines: 2),
               _buildTextField(_contentController, "Content", maxLines: 3),
               _buildTextField(_contactController, "Contact"),
@@ -198,12 +216,12 @@ class _AddEventScreenState extends State<AddEventScreen> {
               const SizedBox(height: 12),
               _buildImageUrlField(
                 controller: _featuredImageController,
-                label: "Featured Image URL",
+                label: "Featured Image ID",
                 isFeatured: true,
               ),
 
               const SizedBox(height: 16),
-              const Text("Slider Image URLs", style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text("Slider Image IDs", style: TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
               ..._imageControllers.asMap().entries.map((entry) {
                 int index = entry.key;
@@ -212,7 +230,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   padding: const EdgeInsets.only(bottom: 10),
                   child: _buildImageUrlField(
                     controller: controller,
-                    label: "Image URL ${index + 1}",
+                    label: "Image ID ${index + 1}",
                     onRemove: _imageControllers.length > 1
                         ? () => _removeImageField(index)
                         : null,

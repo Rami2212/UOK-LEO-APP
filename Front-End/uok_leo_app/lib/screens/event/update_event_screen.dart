@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/event.dart';
 import '../../data/repositories/event_repository.dart';
+import '../../widgets/widgets.dart';
 
 class UpdateEventScreen extends StatefulWidget {
   final String eventId;
@@ -160,10 +161,18 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                   controller: _imageUrlController,
                   decoration: InputDecoration(labelText: "Image ID"),
                 ),
-                ElevatedButton(
-                  onPressed: _addImageUrl,
-                  child: Text("Add Image"),
+
+                SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: "Add Image",
+                    onPressed: _addImageUrl,
+                  ),
                 ),
+
+                SizedBox(height: 20),
 
                 // Display added image URLs
                 _imageUrls.isNotEmpty
@@ -185,9 +194,13 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                     : Container(),
 
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _updateEvent,
-                  child: Text("Update Event"),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: "Update Event",
+                    onPressed: _updateEvent,
+                  ),
                 ),
               ],
             ),

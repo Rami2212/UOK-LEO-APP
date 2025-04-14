@@ -25,7 +25,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('role') ?? 'member';
+      userRole = prefs.getString('role') ?? 'Member';
     });
   }
 
@@ -50,19 +50,23 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
 
           List<Evaluation> evaluations = snapshot.data!;
 
+          final reversedEvaluations = evaluations.reversed.toList();
+
           return ListView.builder(
-            itemCount: evaluations.length,
+            itemCount: reversedEvaluations.length,
             itemBuilder: (context, index) {
+              final evaluation = reversedEvaluations[index];
               return EvaluationCard(
-                evaluationId: evaluations[index].id,
-                imageUrl: evaluations[index].featuredImage,
-                name: evaluations[index].name,
-                description: evaluations[index].description,
-                month: evaluations[index].month,
+                evaluationId: evaluation.id,
+                imageUrl: evaluation.featuredImage,
+                name: evaluation.name,
+                description: evaluation.description,
+                month: evaluation.month,
                 userRole: userRole,
               );
             },
           );
+
         },
       ),
       floatingActionButton: userRole == 'Admin'

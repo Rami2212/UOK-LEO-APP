@@ -25,7 +25,7 @@ class _EventScreenState extends State<EventScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('role') ?? 'member';
+      userRole = prefs.getString('role') ?? 'Member';
     });
   }
 
@@ -53,7 +53,7 @@ class _EventScreenState extends State<EventScreen> {
           return ListView.builder(
             itemCount: events.length,
             itemBuilder: (context, index) {
-              final event = events[index];
+              final event = events.reversed.toList()[index]; // Reverse the list
               return EventCard(
                 eventId: event.id,
                 imageUrl: event.featuredImage,
@@ -64,6 +64,7 @@ class _EventScreenState extends State<EventScreen> {
               );
             },
           );
+
 
         },
       ),

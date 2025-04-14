@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/evaluation.dart';
 import '../../data/repositories/evaluation_repository.dart';
+import '../../widgets/widgets.dart';
 
 class UpdateEvaluationScreen extends StatefulWidget {
   final String evaluationId;
@@ -20,7 +21,6 @@ class _UpdateEvaluationScreenState extends State<UpdateEvaluationScreen> {
   final _imageUrlController = TextEditingController();
 
   final EvaluationRepository _evaluationRepository = EvaluationRepository();
-  List<String> _imageUrls = [];
 
   bool _isLoading = true;
 
@@ -39,22 +39,13 @@ class _UpdateEvaluationScreenState extends State<UpdateEvaluationScreen> {
         _descriptionController.text = evaluation.description;
         _contentController.text = evaluation.content;
         _monthController.text = evaluation.month;
-        _imageUrls = [evaluation.featuredImage];
+        _imageUrlController.text = evaluation.featuredImage;
         _isLoading = false;
       });
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to load evaluation details")));
       setState(() {
         _isLoading = false;
-      });
-    }
-  }
-
-  void _addImageUrl() {
-    if (_imageUrlController.text.isNotEmpty) {
-      setState(() {
-        _imageUrls.add(_imageUrlController.text);
-        _imageUrlController.clear();
       });
     }
   }
@@ -66,7 +57,7 @@ class _UpdateEvaluationScreenState extends State<UpdateEvaluationScreen> {
         name: _nameController.text,
         description: _descriptionController.text,
         content: _contentController.text,
-        featuredImage: _imageUrls.isNotEmpty ? _imageUrls[0] : '',
+        featuredImage: _imageUrlController.text,
         month: _monthController.text,
       );
 
@@ -119,36 +110,17 @@ class _UpdateEvaluationScreenState extends State<UpdateEvaluationScreen> {
                 // Image URL Input
                 TextFormField(
                   controller: _imageUrlController,
-                  decoration: InputDecoration(labelText: "Image URL"),
+                  decoration: InputDecoration(labelText: "Image ID"),
+                  validator: (value) => value!.isEmpty ? "Month is required" : null,
                 ),
-                ElevatedButton(
-                  onPressed: _addImageUrl,
-                  child: Text("Add Image"),
-                ),
-
-                // Display added image URLs
-                _imageUrls.isNotEmpty
-                    ? Column(
-                  children: _imageUrls
-                      .map((url) => ListTile(
-                    title: Text(url),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () {
-                        setState(() {
-                          _imageUrls.remove(url);
-                        });
-                      },
-                    ),
-                  ))
-                      .toList(),
-                )
-                    : Container(),
 
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _updateEvaluation,
-                  child: Text("Update Evaluation"),
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: 'Update Evaluation',
+                    onPressed: _updateEvaluation,
+                  ),
                 ),
               ],
             ),

@@ -40,7 +40,7 @@ class EvaluationCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.network(imageUrl, height: 180, width: double.infinity, fit: BoxFit.cover),
+            child: Image.network('https://drive.google.com/uc?export=view&id=$imageUrl', height: 180, width: double.infinity, fit: BoxFit.cover),
           ),
           Padding(
             padding: EdgeInsets.all(12),

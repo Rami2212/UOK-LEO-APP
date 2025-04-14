@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/achievement.dart';
 import '../../data/repositories/achievement_repository.dart';
+import '../../widgets/widgets.dart';
 
 class UpdateAchievementScreen extends StatefulWidget {
   final String achievementId;
@@ -19,7 +20,6 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
   final _imageUrlController = TextEditingController();
 
   final AchievementRepository _achievementRepository = AchievementRepository();
-  List<String> _imageUrls = [];
 
   bool _isLoading = true;
 
@@ -36,7 +36,7 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
         _nameController.text = achievement.name;
         _descriptionController.text = achievement.description;
         _contentController.text = achievement.content;
-        _imageUrls = achievement.featuredImage.isNotEmpty ? [achievement.featuredImage] : [];
+        _imageUrlController.text = achievement.featuredImage;
         _isLoading = false;
       });
     } catch (e) {
@@ -47,15 +47,6 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
     }
   }
 
-  void _addImageUrl() {
-    if (_imageUrlController.text.isNotEmpty) {
-      setState(() {
-        _imageUrls.add(_imageUrlController.text.trim());
-        _imageUrlController.clear();
-      });
-    }
-  }
-
   void _updateAchievement() async {
     if (_formKey.currentState!.validate()) {
       Achievement updatedAchievement = Achievement(
@@ -63,7 +54,7 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         content: _contentController.text.trim(),
-        featuredImage: _imageUrls.isNotEmpty ? _imageUrls[0] : '',
+        featuredImage: _imageUrlController.text.trim(),
       );
 
       bool success = await _achievementRepository.updateAchievement(updatedAchievement);
@@ -110,39 +101,18 @@ class _UpdateAchievementScreenState extends State<UpdateAchievementScreen> {
                   validator: (value) => value!.isEmpty ? "Content is required" : null,
                 ),
                 const SizedBox(height: 10),
-
-                // Image URL input
                 TextFormField(
                   controller: _imageUrlController,
-                  decoration: InputDecoration(labelText: "Image URL"),
+                  decoration: InputDecoration(labelText: "Image ID"),
+                  validator: (value) => value!.isEmpty ? "Content is required" : null,
                 ),
-                ElevatedButton(
-                  onPressed: _addImageUrl,
-                  child: Text("Add Image"),
-                ),
-
-                // Show added images
-                if (_imageUrls.isNotEmpty)
-                  Column(
-                    children: _imageUrls.map((url) {
-                      return ListTile(
-                        title: Text(url),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            setState(() {
-                              _imageUrls.remove(url);
-                            });
-                          },
-                        ),
-                      );
-                    }).toList(),
-                  ),
-
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _updateAchievement,
-                  child: Text("Update Achievement"),
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: "Update Achievement",
+                    onPressed: _updateAchievement,
+                  ),
                 ),
               ],
             ),

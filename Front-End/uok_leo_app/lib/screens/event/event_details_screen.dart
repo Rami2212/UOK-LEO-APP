@@ -84,7 +84,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                       infoRow(FontAwesomeIcons.calendar, "Date", event.date, primaryColor),
                       infoRow(FontAwesomeIcons.clock, "Time", event.time, primaryColor),
                       infoRow(FontAwesomeIcons.locationDot, "Venue", event.venue, primaryColor),
-                      infoRow(FontAwesomeIcons.road, "Avenue", event.avenue, primaryColor),
+                      infoRow(FontAwesomeIcons.userGroup, "Avenue", event.avenue, primaryColor),
                       infoRow(FontAwesomeIcons.phone, "Contact", event.contact, primaryColor),
                       const SizedBox(height: 20),
 
