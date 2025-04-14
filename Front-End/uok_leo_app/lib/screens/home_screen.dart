@@ -5,12 +5,14 @@ import 'package:uok_leo_app/data/repositories/evaluation_repository.dart';
 import 'package:uok_leo_app/data/repositories/event_repository.dart';
 import 'package:uok_leo_app/screens/achievement/achievement_screen.dart';
 import 'package:uok_leo_app/screens/evaluation/evaluation_screen.dart';
-import 'package:uok_leo_app/screens/notifications_screen.dart';
-import 'package:uok_leo_app/screens/profile/profile_screen_admin.dart';
+import 'package:uok_leo_app/screens/notification/notifications_screen.dart';
+import 'package:uok_leo_app/screens/admin_functions_screen.dart';
 import '../data/models/achievement.dart';
 import '../data/models/evaluation.dart';
 import '../data/models/event.dart';
+import '../data/models/notification.dart';
 import '../data/repositories/achievement_repository.dart';
+import '../data/repositories/notification_repository.dart';
 import '../screens/calendar_screen.dart';
 import 'event/event_screen.dart';
 import '../widgets/bottom_nav.dart';
@@ -27,9 +29,11 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Event>> _eventsFuture;
   late Future<List<Achievement>> _achievementsFuture;
   late Future<List<Evaluation>> _evaluationsFuture;
+  late Future<List<Notifications>> _notificationsFuture;
   final EventRepository _eventRepository = EventRepository();
   final AchievementRepository _achievementsRepository = AchievementRepository();
   final EvaluationRepository _evaluationRepository = EvaluationRepository();
+  final NotificationRepository _notificationRepository = NotificationRepository();
 
 
   @override
@@ -39,6 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _eventsFuture = _eventRepository.fetchAllEvents();
     _achievementsFuture = _achievementsRepository.fetchAllAchievements();
     _evaluationsFuture = _evaluationRepository.fetchAllEvaluations();
+    _notificationsFuture = _notificationRepository.fetchNotifications();
   }
 
   Future<void> _loadUserRole() async {
@@ -66,8 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
       AchievementScreen(achievementsFuture: _achievementsFuture),
       EvaluationScreen(evaluationsFuture: _evaluationsFuture),
       CalendarPage(isDirector: true, isAdmin: true),
-      NotificationScreen(),
-      _isAdmin! ? ProfileScreenAdmin() : ProfileScreen(),
+      NotificationScreen(notificationsFuture: _notificationsFuture),
+      _isAdmin! ? AdminFunctionsScreen() : ProfileScreen(),
     ];
 
     return Scaffold(

@@ -60,7 +60,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                     height: 250,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) =>
-                        Image.asset('assets/default-image.jpg', width: double.infinity, height: 250, fit: BoxFit.cover),
+                        Image.network('https://drive.google.com/uc?export=view&id=${event.featuredImage}', width: double.infinity, height: 250, fit: BoxFit.cover),
                     loadingBuilder: (context, child, loadingProgress) =>
                     loadingProgress == null
                         ? child
@@ -119,7 +119,7 @@ class _EventDetailsScreenState extends State<EventDetailsScreen> {
                                   height: 150,
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) =>
-                                      Image.asset('assets/default-image.jpg', width: 150, height: 150, fit: BoxFit.cover),
+                                      Image.network('https://drive.google.com/uc?export=view&id=${event.images[index]}', width: 150, height: 150, fit: BoxFit.cover),
                                   loadingBuilder: (context, child, loadingProgress) =>
                                   loadingProgress == null
                                       ? child

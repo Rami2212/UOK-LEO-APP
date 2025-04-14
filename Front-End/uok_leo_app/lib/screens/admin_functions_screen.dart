@@ -5,14 +5,14 @@ import 'package:uok_leo_app/screens/profile/profile_screen.dart';
 import 'package:uok_leo_app/screens/profile/edit_profile_screen.dart';
 import 'package:uok_leo_app/screens/member/member_screen.dart';
 
-import '../../widgets/widgets.dart';
+import '../widgets/widgets.dart';
 
-class ProfileScreenAdmin extends StatefulWidget {
+class AdminFunctionsScreen extends StatefulWidget {
   @override
-  State<ProfileScreenAdmin> createState() => _ProfileScreenAdminState();
+  State<AdminFunctionsScreen> createState() => _AdminFunctionsScreenState();
 }
 
-class _ProfileScreenAdminState extends State<ProfileScreenAdmin> {
+class _AdminFunctionsScreenState extends State<AdminFunctionsScreen> {
   String? userId;
 
   @override
@@ -32,24 +32,26 @@ class _ProfileScreenAdminState extends State<ProfileScreenAdmin> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Admin Profile", style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: IconThemeData(color: Colors.black),
+        title: Text("Admin Functions"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            tooltip: 'Logout',
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.clear(); // clear all saved data (or just remove userId if needed)
+
+              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            },
+          ),
+        ],
       ),
+
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: AssetImage('assets/profile_placeholder.png'),
-            ),
-            SizedBox(height: 10),
-            Text("Admin Name", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            Text("admin@example.com", style: TextStyle(fontSize: 16, color: Colors.grey)),
-            SizedBox(height: 30),
 
             SizedBox(
               width: double.infinity, // Ensures the button takes up full width

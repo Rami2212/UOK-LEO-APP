@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/models/user.dart';
+import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../widgets/widgets.dart';
 
@@ -11,7 +12,7 @@ class AddMemberScreen extends StatefulWidget {
 
 class _AddMemberScreenState extends State<AddMemberScreen> {
   final _formKey = GlobalKey<FormState>();
-  final UserRepository userRepository = UserRepository();
+  final AuthRepository _authRepository = AuthRepository();
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -25,9 +26,11 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
 
   String _selectedRole = 'Member';
   String _selectedAvenue = 'Default';
+  String _selectedFaculty = 'Science';
 
   final List<String> roles = ['Member', 'Director', 'Admin'];
   final List<String> avenues = ['Default', 'Leadership', 'Service', 'Fundraising', 'Fellowship'];
+  final List<String> faculties = ['Science', 'Arts', 'Commerce', 'Management'];
 
   Future<void> _selectDOB(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -46,11 +49,11 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   void _saveMember() async {
     if (_formKey.currentState!.validate()) {
       User newMember = User(
-        id: "", // ID will be auto-generated usually
+        id: "", // ID usually handled by backend
         name: _nameController.text.trim(),
         lastName: _lastNameController.text.trim(),
         studentId: _studentIdController.text.trim(),
-        faculty: _facultyController.text.trim(),
+        faculty: _selectedFaculty,
         department: _departmentController.text.trim(),
         role: _selectedRole,
         avenue: _selectedAvenue,
@@ -58,15 +61,25 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
         mobileNumber: _contactController.text.trim(),
-        profileImage: "", // Skipping image upload for now
+        profileImage: "", // Optional
       );
 
+      final userRepository = UserRepository();
       bool success = await userRepository.addUser(newMember);
+
       if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("User added successfully")),
+        );
         Navigator.pop(context);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to add user")),
+        );
       }
     }
   }
+
 
   @override
   void dispose() {
@@ -103,14 +116,20 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                 CustomTextField(hintText: "Student ID", controller: _studentIdController),
                 SizedBox(height: 12),
 
-                CustomTextField(hintText: "Faculty", controller: _facultyController),
+                CustomDropdown(
+                    hintText: "",
+                    value: _selectedFaculty,
+                    items: faculties,
+                    onChanged: (val) => setState(() => _selectedFaculty = val!)
+                ),
+
                 SizedBox(height: 12),
 
                 CustomTextField(hintText: "Department", controller: _departmentController),
                 SizedBox(height: 12),
 
                 CustomDropdown(
-                  hintText: "Role",
+                  hintText: "",
                   value: _selectedRole,
                   items: roles,
                   onChanged: (val) => setState(() => _selectedRole = val!),
@@ -118,7 +137,7 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                 SizedBox(height: 12),
 
                 CustomDropdown(
-                  hintText: "Avenue",
+                  hintText: "",
                   value: _selectedAvenue,
                   items: avenues,
                   onChanged: (val) => setState(() => _selectedAvenue = val!),
@@ -131,12 +150,15 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
                   decoration: InputDecoration(
                     labelText: "Date of Birth",
                     suffixIcon: Icon(Icons.calendar_today),
-                    border: OutlineInputBorder(),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   onTap: () => _selectDOB(context),
                   validator: (value) =>
-                  value!.isEmpty ? "Please select date of birth" : null,
+                  value == null || value.isEmpty ? "Please select date of birth" : null,
                 ),
+
                 SizedBox(height: 12),
 
                 CustomTextField(

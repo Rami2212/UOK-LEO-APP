@@ -1,27 +1,42 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uok_leo_app/data/models/profile_edit_request.dart';
 import '../models/user.dart';
 
 class UserRepository {
-  final String baseUrl = "http://localhost:3000/api/v1"; // ✅ double check if "vi" was a typo
+  final String baseUrl = "http://10.0.2.2:3000/api/v1";
 
-  // Get user by ID
+  // Private helper to get the token
+  Future<String?> _getToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
+  // Fetch user profile by ID
   Future<User> getUserProfile(String userId) async {
     final response = await http.get(Uri.parse('$baseUrl/users/$userId'));
 
     if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
+      final decoded = jsonDecode(response.body);
+      // Access the 'data' field inside 'user'
+      return User.fromJson(decoded['user']['data']);
     } else {
       throw Exception('Failed to load user profile: ${response.statusCode}');
     }
   }
 
   // Update user profile
-  Future<bool> updateUserProfile(String userId, User user) async {
+  Future<bool> updateUserProfile(String userId, ProfileEditRequest profileEditRequest) async {
+    final token = await _getToken();
+
     final response = await http.put(
       Uri.parse('$baseUrl/users/$userId'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(user.toJson()),
+      headers: {
+        "Content-Type": "application/json",
+        if (token != null) "Authorization": "Bearer $token",
+      },
+      body: jsonEncode(profileEditRequest.toJson()),
     );
 
     if (response.statusCode != 200) {
@@ -33,7 +48,15 @@ class UserRepository {
 
   // Delete user profile
   Future<bool> deleteUserProfile(String userId) async {
-    final response = await http.delete(Uri.parse('$baseUrl/users/$userId'));
+    final token = await _getToken();
+
+    final response = await http.delete(
+      Uri.parse('$baseUrl/users/$userId'),
+      headers: {
+        "Content-Type": "application/json",
+        if (token != null) "Authorization": "Bearer $token",
+      },
+    );
 
     if (response.statusCode != 200) {
       print("Delete failed: ${response.body}");
@@ -44,28 +67,39 @@ class UserRepository {
 
   // Fetch all users
   Future<List<User>> fetchAllUsers() async {
-    final response = await http.get(Uri.parse('$baseUrl/users'));
+    final response = await http.get(
+      Uri.parse('$baseUrl/users'),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
 
     if (response.statusCode == 200) {
-      List<dynamic> jsonList = jsonDecode(response.body)['users']['data'];
+      final decoded = jsonDecode(response.body);
+      // Access the correct field for user data
+      final List<dynamic> jsonList = decoded['user']['data'];  // Fix: changed 'users' to 'user'
       return jsonList.map((json) => User.fromJson(json)).toList();
     } else {
-      throw Exception('Failed to load users: ${response.statusCode}');
+      print('Fetch users failed: ${response.statusCode} ${response.body}');
+      throw Exception('Failed to load users');
     }
   }
 
-  // Add new user
+  // Add a new user
   Future<bool> addUser(User user) async {
+
     final response = await http.post(
-      Uri.parse('$baseUrl/users'),
-      headers: {'Content-Type': 'application/json'},
+      Uri.parse('$baseUrl/users/create'),
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: jsonEncode(user.toJson()),
     );
 
-    if (response.statusCode != 201) {
+    if (response.statusCode != 200) {
       print("Add failed: ${response.body}");
     }
 
-    return response.statusCode == 201;
+    return response.statusCode == 200;
   }
 }

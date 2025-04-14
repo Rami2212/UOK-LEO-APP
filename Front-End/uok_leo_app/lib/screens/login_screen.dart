@@ -79,15 +79,15 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 10),
 
-            // Forgot Password
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {},
-                child: const Text('Forgot Password?'),
-              ),
-            ),
-            const SizedBox(height: 10),
+            // // Forgot Password
+            // Align(
+            //   alignment: Alignment.centerRight,
+            //   child: TextButton(
+            //     onPressed: () {},
+            //     child: const Text('Forgot Password?'),
+            //   ),
+            // ),
+            // const SizedBox(height: 10),
 
             // Login Button
             CustomButton(
@@ -101,17 +101,6 @@ class _LoginScreenState extends State<LoginScreen> {
               text: 'Sign Up',
               onPressed: () {
                 Navigator.pushNamed(context, '/register');
-              },
-            ),
-
-            //testing
-            const SizedBox(height: 10),
-
-            // Sign Up Button
-            CustomButton(
-              text: 'Home(Testing)',
-              onPressed: () {
-                Navigator.pushNamed(context, '/home');
               },
             ),
           ],

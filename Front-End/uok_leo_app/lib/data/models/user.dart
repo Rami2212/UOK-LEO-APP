@@ -29,27 +29,55 @@ class User {
     this.profileImage = '',
   });
 
+  User copyWith({
+    String? id,
+    String? name,
+    String? lastName,
+    String? studentId,
+    String? faculty,
+    String? department,
+    String? role,
+    String? avenue,
+    String? dob,
+    String? email,
+    String? mobileNumber,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      lastName: lastName ?? this.lastName,
+      studentId: studentId ?? this.studentId,
+      faculty: faculty ?? this.faculty,
+      department: department ?? this.department,
+      role: role ?? this.role,
+      avenue: avenue ?? this.avenue,
+      dob: dob ?? this.dob,
+      email: email ?? this.email,
+      password: password,
+      mobileNumber: mobileNumber ?? this.mobileNumber,
+    );
+  }
+
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'],
-      name: json['name'],
-      role: json['role'],
-      avenue: json['avenue'],
-      dob: json['dob'],
-      email: json['email'],
-      password: json['password'],
-      lastName: json['lastName'],
-      studentId: json['studentId'],
-      faculty: json['faculty'],
-      department: json['department'],
-      mobileNumber: json['mobileNumber'],
+      id: json['_id'].toString() ?? '',
+      name: json['name'].toString() ?? '',
+      role: json['role'].toString() ?? '',
+      avenue: json['avenue'].toString() ?? '',
+      dob: json['dob'].toString() ?? '',
+      email: json['email'].toString() ?? '',
+      password: json['password'].toString() ?? '',
+      lastName: json['lastName'].toString() ?? '',
+      studentId: json['studentId'].toString() ?? '',
+      faculty: json['faculty'].toString() ?? '',
+      department: json['department'].toString() ?? '',
+      mobileNumber: json['mobileNumber'].toString() ?? '',
       profileImage: json['profileImage'] ?? '', // Default to empty string if null
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'role': role,
       'avenue': avenue,

@@ -28,7 +28,7 @@ class UserCard extends StatelessWidget {
                   ),
                 );
               },
-              child: Text("View", style: TextStyle(color: Colors.blue)),
+              child: Text("View", style: TextStyle(color: Colors.orange)),
             ),
           ],
         ),

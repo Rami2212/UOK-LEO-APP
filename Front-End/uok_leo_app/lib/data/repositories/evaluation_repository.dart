@@ -1,13 +1,24 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/evaluation.dart';
 
 class EvaluationRepository {
   final String baseUrl = "http://10.0.2.2:3000/api/v1";
 
+  // Private method to get token from SharedPreferences
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
   // Fetch all evaluations
   Future<List<Evaluation>> fetchAllEvaluations() async {
-    final response = await http.get(Uri.parse("$baseUrl/evaluations"));
+    final token = await _getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/evaluations"),
+      headers: {"Authorization": "Bearer $token"},
+    );
 
     if (response.statusCode == 200) {
       final decoded = jsonDecode(response.body);
@@ -27,7 +38,11 @@ class EvaluationRepository {
 
   // Fetch details of a single evaluation
   Future<Evaluation> fetchEvaluationDetails(String evaluationId) async {
-    final response = await http.get(Uri.parse('$baseUrl/evaluations/$evaluationId'));
+    final token = await _getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/evaluations/$evaluationId'),
+      headers: {"Authorization": "Bearer $token"},
+    );
 
     if (response.statusCode == 200) {
       final decoded = json.decode(response.body);
@@ -46,20 +61,28 @@ class EvaluationRepository {
 
   // Add a new evaluation
   Future<bool> addEvaluation(Evaluation evaluation) async {
+    final token = await _getToken();
     final response = await http.post(
       Uri.parse("$baseUrl/evaluations/save"),
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
       body: jsonEncode(evaluation.toJson()),
     );
 
-    return response.statusCode == 200;
+    return response.statusCode == 200 || response.statusCode == 201;
   }
 
   // Update an existing evaluation
   Future<bool> updateEvaluation(Evaluation evaluation) async {
+    final token = await _getToken();
     final response = await http.put(
       Uri.parse("$baseUrl/evaluations/${evaluation.id}"),
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
       body: jsonEncode(evaluation.toJson()),
     );
 
@@ -68,7 +91,11 @@ class EvaluationRepository {
 
   // Delete an evaluation
   Future<bool> deleteEvaluation(String evaluationId) async {
-    final response = await http.delete(Uri.parse("$baseUrl/evaluations/$evaluationId"));
+    final token = await _getToken();
+    final response = await http.delete(
+      Uri.parse("$baseUrl/evaluations/$evaluationId"),
+      headers: {"Authorization": "Bearer $token"},
+    );
 
     return response.statusCode == 200;
   }

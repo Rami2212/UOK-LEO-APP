@@ -59,7 +59,11 @@ class _MemberScreenState extends State<MemberScreen> {
             MaterialPageRoute(builder: (context) => AddMemberScreen()),
           ).then((_) => _refreshMembers());
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.orange,
       ),
     );
   }

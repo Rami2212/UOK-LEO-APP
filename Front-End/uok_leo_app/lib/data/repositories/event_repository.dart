@@ -1,27 +1,39 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/event.dart';
 
 class EventRepository {
   final String baseUrl = "http://10.0.2.2:3000/api/v1";
 
+  Future<String?> _getToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('token');
+  }
+
   // Fetch all events
   Future<List<Event>> fetchAllEvents() async {
-    final response = await http.get(Uri.parse("$baseUrl/events"));
+    final token = await _getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/events"),
+      headers: {"Authorization": "Bearer $token"},
+    );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body)['events']['data'];  // Adjust to handle nested data
-      List<Event> events = List<Event>.from(data.map((item) => Event.fromJson(item)));
-      return events;
+      final data = jsonDecode(response.body)['events']['data'];
+      return List<Event>.from(data.map((item) => Event.fromJson(item)));
     } else {
       throw Exception("Failed to load events");
     }
   }
 
-
   // Fetch details of a single event
   Future<Event> fetchEventDetails(String eventId) async {
-    final response = await http.get(Uri.parse('$baseUrl/events/$eventId'));
+    final token = await _getToken();
+    final response = await http.get(
+      Uri.parse('$baseUrl/events/$eventId'),
+      headers: {"Authorization": "Bearer $token"},
+    );
 
     if (response.statusCode == 200) {
       final decoded = json.decode(response.body);
@@ -42,7 +54,11 @@ class EventRepository {
 
   // Fetch events by date
   Future<List<Event>> fetchEventsByDate(String date) async {
-    final response = await http.get(Uri.parse("$baseUrl/events/date/$date"));
+    final token = await _getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/events/date/$date"),
+      headers: {"Authorization": "Bearer $token"},
+    );
 
     if (response.statusCode == 200) {
       List<dynamic> jsonList = jsonDecode(response.body)['events']['data'];
@@ -52,13 +68,16 @@ class EventRepository {
     }
   }
 
-
-  // Fetch events by user ID
+  // Add a new event
   Future<bool> addEvent(Event event) async {
+    final token = await _getToken();
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/events/save"),
-        headers: {"Content-Type": "application/json"},
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer $token",
+        },
         body: jsonEncode(event.toJson()),
       );
 
@@ -71,9 +90,13 @@ class EventRepository {
 
   // Update an existing event
   Future<bool> updateEvent(Event event) async {
+    final token = await _getToken();
     final response = await http.put(
       Uri.parse("$baseUrl/events/${event.id}"),
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer $token",
+      },
       body: jsonEncode(event.toJson()),
     );
 
@@ -82,9 +105,12 @@ class EventRepository {
 
   // Delete an event
   Future<bool> deleteEvent(String eventId) async {
-    final response = await http.delete(Uri.parse("$baseUrl/events/$eventId"));
+    final token = await _getToken();
+    final response = await http.delete(
+      Uri.parse("$baseUrl/events/$eventId"),
+      headers: {"Authorization": "Bearer $token"},
+    );
 
     return response.statusCode == 200;
   }
-
 }

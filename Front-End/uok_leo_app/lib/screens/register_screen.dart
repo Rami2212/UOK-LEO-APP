@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:uok_leo_app/data/models/registration_request.dart';
 import 'package:uok_leo_app/providers/auth_provider.dart';
 import '../widgets/widgets.dart';
+import 'login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -22,9 +23,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  final List<String> _roles = ['Member', 'Director', 'Admin'];
-  final List<String> _avenues = ['Education', 'Environment', 'Health', 'Peace'];
-  final List<String> _faculties = ['Science', 'Arts', 'Commerce', 'Management'];
+  final List<String> _roles = ['Member', 'Director'];
+  final List<String> _avenues = ['Education & Literacy',
+    'Environment Conservation',
+    'Healthcare',
+    'Clean Water & Energy Conservation'
+
+  ];
+
+  final List<String> _faculties = ['Science',
+    'Commerce & Management Studies',
+    'Computing & Technology',
+    'Social Sciences',
+    'Humanities'
+  'Medicine'
+  ];
 
   String? _selectedRole;
   String? _selectedAvenue;
@@ -75,7 +88,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     setState(() => _isLoading = false);
 
     if (success) {
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Registration failed")),

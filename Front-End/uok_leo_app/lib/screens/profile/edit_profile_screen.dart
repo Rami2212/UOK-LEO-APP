@@ -1,104 +1,159 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uok_leo_app/data/models/profile_edit_request.dart';
+
 import '../../data/models/user.dart';
 import '../../data/repositories/user_repository.dart';
+import '../../widgets/widgets.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final User user;
 
-  EditProfileScreen({required this.user});
+  const EditProfileScreen({super.key, required this.user});
 
   @override
-  _EditProfileScreenState createState() => _EditProfileScreenState();
+  State<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
+  final UserRepository userRepository = UserRepository();
 
   late TextEditingController _nameController;
   late TextEditingController _lastNameController;
-  late TextEditingController _emailController;
   late TextEditingController _studentIdController;
   late TextEditingController _facultyController;
   late TextEditingController _departmentController;
-  late TextEditingController _mobileNumberController;
+  late TextEditingController _avenueController;
   late TextEditingController _dobController;
+  late TextEditingController _emailController;
+  late TextEditingController _mobileNumberController;
 
-  String? _selectedRole;
+  final List<String> _avenues = ['Education & Literacy',
+    'Environment Conservation',
+    'Healthcare',
+    'Clean Water & Energy Conservation'
+
+  ];
+
+  final List<String> _faculties = ['Science',
+    'Commerce & Management Studies',
+    'Computing & Technology',
+    'Social Sciences',
+    'Humanities'
+        'Medicine'
+  ];
+
+  DateTime? _selectedDob;
   String? _selectedAvenue;
+  String? _selectedFaculty;
 
-  final List<String> _roles = ['Member', 'Director'];
-  final List<String> _avenues = ['Education', 'Environment', 'Health', 'Peace'];
-
-  final UserRepository _userRepository = UserRepository();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _initializeControllers();
+  }
+
+  void _initializeControllers() {
+    // Initialize the controllers with existing user data
     _nameController = TextEditingController(text: widget.user.name);
     _lastNameController = TextEditingController(text: widget.user.lastName);
-    _emailController = TextEditingController(text: widget.user.email);
     _studentIdController = TextEditingController(text: widget.user.studentId);
     _facultyController = TextEditingController(text: widget.user.faculty);
     _departmentController = TextEditingController(text: widget.user.department);
+    _avenueController = TextEditingController(text: widget.user.avenue);
+    _emailController = TextEditingController(text: widget.user.email);
     _mobileNumberController = TextEditingController(text: widget.user.mobileNumber);
-    _dobController = TextEditingController(text: widget.user.dob);
-    _selectedRole = widget.user.role;
-    _selectedAvenue = widget.user.avenue;
+
+    // Initialize dob controller and selectedDob with null checks
+    if (widget.user.dob != null && widget.user.dob.isNotEmpty) {
+      try {
+        _dobController = TextEditingController(text: widget.user.dob);
+        _selectedDob = DateFormat('dd MMM yyyy').parse(widget.user.dob);
+      } catch (e) {
+        // Handle any exception related to incorrect date format
+        print("Error parsing date: $e");
+        _dobController = TextEditingController(text: ""); // Default to empty if invalid date format
+        _selectedDob = null;
+      }
+    } else {
+      _dobController = TextEditingController(text: ""); // Default empty value if dob is empty
+      _selectedDob = null; // Set selectedDob to null if no dob available
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _lastNameController.dispose();
-    _emailController.dispose();
-    _studentIdController.dispose();
-    _facultyController.dispose();
-    _departmentController.dispose();
-    _mobileNumberController.dispose();
-    _dobController.dispose();
-    super.dispose();
-  }
 
-  Future<void> _pickDob() async {
-    final picked = await showDatePicker(
+
+  void _pickDob() async {
+    DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: DateTime.tryParse(widget.user.dob) ?? DateTime(2000),
-      firstDate: DateTime(1950),
+      initialDate: _selectedDob ?? DateTime(2000),
+      firstDate: DateTime(1900),
       lastDate: DateTime.now(),
     );
+
     if (picked != null) {
-      _dobController.text = DateFormat('yyyy-MM-dd').format(picked);
+      setState(() {
+        _selectedDob = picked;
+        _dobController.text = DateFormat('dd MMM yyyy').format(picked);
+      });
     }
   }
 
-  Future<void> _updateProfile() async {
+  void _saveProfile() async {
     if (_formKey.currentState!.validate()) {
-      User updatedUser = User(
-        id: widget.user.id,
-        name: _nameController.text.trim(),
-        lastName: _lastNameController.text.trim(),
-        email: _emailController.text.trim(),
-        studentId: _studentIdController.text.trim(),
-        faculty: _facultyController.text.trim(),
-        department: _departmentController.text.trim(),
-        mobileNumber: _mobileNumberController.text.trim(),
-        dob: _dobController.text.trim(),
-        avenue: _selectedAvenue ?? '',
-        role: _selectedRole ?? '',
-        password: widget.user.password, // Keep existing password
+      ProfileEditRequest updatedUser = ProfileEditRequest(
+        name: _nameController.text,
+        lastName: _lastNameController.text,
+        studentId: _studentIdController.text,
+        faculty: _facultyController.text,
+        department: _departmentController.text,
+        avenue: _avenueController.text,
+        dob: _dobController.text,
+        email: _emailController.text,
+        mobileNumber: _mobileNumberController.text,
       );
 
-      bool success = await _userRepository.updateUserProfile(widget.user.id, updatedUser);
+      bool success = await userRepository.updateUserProfile(widget.user.id, updatedUser);
       if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Profile Updated Successfully!")),
-        );
-        Navigator.pop(context, true);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profile updated successfully")));
+        Navigator.pop(context, updatedUser);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to update profile")),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to update profile")));
+      }
+    }
+  }
+
+  void _deleteProfile() async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Confirm Delete"),
+        content: Text("Are you sure you want to delete this profile?"),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text("Cancel")),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text("Delete")),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      bool success = await userRepository.deleteUserProfile(widget.user.id);
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profile deleted")));
+        Navigator.popUntil(context, ModalRoute.withName('/'));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete profile")));
       }
     }
   }
@@ -106,77 +161,91 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit Profile")),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      appBar: AppBar(
+        title: Text("Edit Profile"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.clear();
+              Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+            },
+          ),
+        ],
+      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: "First Name"),
-              ),
-              TextFormField(
-                controller: _lastNameController,
-                decoration: const InputDecoration(labelText: "Last Name"),
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: "Email"),
-              ),
-              TextFormField(
+              Text("First Name",),
+              CustomTextField(controller: _nameController, hintText: "First Name"),
+              SizedBox(height: 10,),
+              Text("First Name",),
+              CustomTextField(controller: _lastNameController, hintText: "Last Name"),
+              SizedBox(height: 10,),
+              Text("Student ID",),
+              CustomTextField(
                 controller: _studentIdController,
-                decoration: const InputDecoration(labelText: "Student ID"),
+                hintText: "Student ID",
               ),
-              TextFormField(
-                controller: _facultyController,
-                decoration: const InputDecoration(labelText: "Faculty"),
+              SizedBox(height: 10,),
+              Text("Faculty",),
+              CustomDropdown(
+                hintText: 'Select Faculty',
+                items: _faculties,
+                value: _selectedFaculty,
+                onChanged: (val) => setState(() => _selectedFaculty = val),
               ),
-              TextFormField(
-                controller: _departmentController,
-                decoration: const InputDecoration(labelText: "Department"),
+              SizedBox(height: 10,),
+              Text("Department",),
+              CustomTextField(controller: _departmentController, hintText: "Department"),
+              SizedBox(height: 10,),
+              Text("Avenue",),
+              CustomDropdown(
+                hintText: 'Select Avenue',
+                items: _avenues,
+                value: _selectedAvenue,
+                onChanged: (val) => setState(() => _selectedAvenue = val),
               ),
-              TextFormField(
-                controller: _mobileNumberController,
-                decoration: const InputDecoration(labelText: "Mobile Number"),
-              ),
+              SizedBox(height: 10,),
+              Text("Date of Birth",),
               GestureDetector(
                 onTap: _pickDob,
                 child: AbsorbPointer(
-                  child: TextFormField(
+                  child: CustomTextField(
                     controller: _dobController,
-                    decoration: const InputDecoration(labelText: "Date of Birth"),
+                    hintText: "Date of Birth",
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
-              DropdownButtonFormField<String>(
-                value: _selectedAvenue,
-                decoration: const InputDecoration(labelText: "Avenue"),
-                items: _avenues.map((avenue) {
-                  return DropdownMenuItem<String>(
-                    value: avenue,
-                    child: Text(avenue),
-                  );
-                }).toList(),
-                onChanged: (val) => setState(() => _selectedAvenue = val),
-              ),
-              DropdownButtonFormField<String>(
-                value: _selectedRole,
-                decoration: const InputDecoration(labelText: "Role"),
-                items: _roles.map((role) {
-                  return DropdownMenuItem<String>(
-                    value: role,
-                    child: Text(role),
-                  );
-                }).toList(),
-                onChanged: (val) => setState(() => _selectedRole = val),
-              ),
+              SizedBox(height: 10,),
+              Text("Email",),
+              CustomTextField(controller: _emailController, hintText: "Email"),
+              SizedBox(height: 10,),
+              Text("Mobile Number",),
+              CustomTextField(controller: _mobileNumberController, hintText: "Mobile Number"),
+              SizedBox(height: 10,),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _updateProfile,
-                child: const Text("Save Changes"),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  text: "Save",
+                  onPressed: _saveProfile,
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  text: "Delete",
+                  onPressed: _deleteProfile,
+                ),
               ),
             ],
           ),
