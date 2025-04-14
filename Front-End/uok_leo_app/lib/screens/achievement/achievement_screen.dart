@@ -25,7 +25,7 @@ class _AchievementScreenState extends State<AchievementScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('user_role') ?? 'member';
+      userRole = prefs.getString('role') ?? 'Member';
     });
   }
 
@@ -50,21 +50,25 @@ class _AchievementScreenState extends State<AchievementScreen> {
 
           List<Achievement> achievements = snapshot.data!;
 
+          final reversedAchievements = achievements.reversed.toList();
+
           return ListView.builder(
-            itemCount: achievements.length,
+            itemCount: reversedAchievements.length,
             itemBuilder: (context, index) {
+              final achievement = reversedAchievements[index];
               return AchievementCard(
-                achievementId: achievements[index].id,
-                name: achievements[index].name,
-                description: achievements[index].description,
-                imageUrl: achievements[index].featuredImage,
+                achievementId: achievement.id,
+                name: achievement.name,
+                description: achievement.description,
+                imageUrl: achievement.featuredImage,
                 userRole: userRole,
               );
             },
           );
+
         },
       ),
-      floatingActionButton: userRole == 'admin'
+      floatingActionButton: userRole == 'Admin'
           ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -72,8 +76,11 @@ class _AchievementScreenState extends State<AchievementScreen> {
             MaterialPageRoute(builder: (context) => AddAchievementScreen()),
           );
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        child: Icon(
+            Icons.add,
+            color: Colors.white,
+        ),
+        backgroundColor: Colors.orange,
       )
           : null,
     );

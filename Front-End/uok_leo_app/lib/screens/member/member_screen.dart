@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../data/repositories/member_repository.dart';
-import '../../data/models/member.dart';
-import '../../widgets/member_card.dart';
+import 'package:uok_leo_app/data/repositories/user_repository.dart';
+import '../../data/models/user.dart';
+import '../../widgets/user_card.dart';
 import 'add_member_screen.dart';
 
 class MemberScreen extends StatefulWidget {
@@ -10,18 +10,18 @@ class MemberScreen extends StatefulWidget {
 }
 
 class _MemberScreenState extends State<MemberScreen> {
-  final MemberRepository memberRepository = MemberRepository();
-  late Future<List<Member>> _membersFuture;
+  final UserRepository userRepository = UserRepository();
+  late Future<List<User>> _usersFuture;
 
   @override
   void initState() {
     super.initState();
-    _membersFuture = memberRepository.fetchAllMembers();
+    _usersFuture = userRepository.fetchAllUsers();
   }
 
   void _refreshMembers() {
     setState(() {
-      _membersFuture = memberRepository.fetchAllMembers();
+      _usersFuture = userRepository.fetchAllUsers();
     });
   }
 
@@ -29,8 +29,8 @@ class _MemberScreenState extends State<MemberScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Manage Members")),
-      body: FutureBuilder<List<Member>>(
-        future: _membersFuture,
+      body: FutureBuilder<List<User>>(
+        future: _usersFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -40,14 +40,13 @@ class _MemberScreenState extends State<MemberScreen> {
             return Center(child: Text("No members found"));
           }
 
-          List<Member> members = snapshot.data!;
+          List<User> users = snapshot.data!;
 
           return ListView.builder(
-            itemCount: members.length,
+            itemCount: users.length,
             itemBuilder: (context, index) {
-              return MemberCard(
-                member: members[index],
-                onDelete: _refreshMembers,
+              return UserCard(
+                user: users[index],
               );
             },
           );
@@ -60,7 +59,11 @@ class _MemberScreenState extends State<MemberScreen> {
             MaterialPageRoute(builder: (context) => AddMemberScreen()),
           ).then((_) => _refreshMembers());
         },
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.orange,
       ),
     );
   }

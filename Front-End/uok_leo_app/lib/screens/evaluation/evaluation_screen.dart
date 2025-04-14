@@ -25,7 +25,7 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('user_role') ?? 'member';
+      userRole = prefs.getString('role') ?? 'Member';
     });
   }
 
@@ -50,22 +50,26 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
 
           List<Evaluation> evaluations = snapshot.data!;
 
+          final reversedEvaluations = evaluations.reversed.toList();
+
           return ListView.builder(
-            itemCount: evaluations.length,
+            itemCount: reversedEvaluations.length,
             itemBuilder: (context, index) {
+              final evaluation = reversedEvaluations[index];
               return EvaluationCard(
-                evaluationId: evaluations[index].id,
-                imageUrl: evaluations[index].featuredImage,
-                name: evaluations[index].name,
-                description: evaluations[index].description,
-                month: evaluations[index].month,
+                evaluationId: evaluation.id,
+                imageUrl: evaluation.featuredImage,
+                name: evaluation.name,
+                description: evaluation.description,
+                month: evaluation.month,
                 userRole: userRole,
               );
             },
           );
+
         },
       ),
-      floatingActionButton: userRole == 'admin'
+      floatingActionButton: userRole == 'Admin'
           ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -73,8 +77,11 @@ class _EvaluationScreenState extends State<EvaluationScreen> {
             MaterialPageRoute(builder: (context) => AddEvaluationScreen()),
           );
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.orange,
       )
           : null,
     );

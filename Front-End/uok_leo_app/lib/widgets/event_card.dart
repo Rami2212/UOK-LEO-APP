@@ -41,7 +41,7 @@ class EventCard extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-            child: Image.network(imageUrl, height: 180, width: double.infinity, fit: BoxFit.cover),
+            child: Image.network('https://drive.google.com/uc?export=view&id=$imageUrl', height: 180, width: double.infinity, fit: BoxFit.cover),
           ),
           Padding(
             padding: EdgeInsets.all(12),
@@ -64,9 +64,9 @@ class EventCard extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => EventDetailsScreen(eventId: eventId)),
                         );
                       },
-                      child: Text("View Details", style: TextStyle(color: Colors.blue)),
+                      child: Text("View Details", style: TextStyle(color: Colors.orange)),
                     ),
-                    if (userRole == 'admin')
+                    if (userRole == 'Admin')
                       Row(
                         children: [
                           IconButton(

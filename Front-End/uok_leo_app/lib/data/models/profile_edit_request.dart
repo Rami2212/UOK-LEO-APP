@@ -1,4 +1,4 @@
-class RegistrationRequest {
+class ProfileEditRequest {
   final String name;
   final String lastName;
   final String email;
@@ -7,11 +7,9 @@ class RegistrationRequest {
   final String department;
   final String avenue;
   final String mobileNumber;
-  final String password;
-  final String role;
   final String dob;
 
-  RegistrationRequest({
+  ProfileEditRequest({
     required this.name,
     required this.lastName,
     required this.email,
@@ -20,8 +18,6 @@ class RegistrationRequest {
     required this.department,
     required this.avenue,
     required this.mobileNumber,
-    required this.password,
-    required this.role,
     required this.dob,
   });
 
@@ -35,8 +31,6 @@ class RegistrationRequest {
       'department': department,
       'avenue': avenue,
       'mobileNumber': mobileNumber,
-      'password': password,
-      'role': role,
       'dob': dob,
     };
   }

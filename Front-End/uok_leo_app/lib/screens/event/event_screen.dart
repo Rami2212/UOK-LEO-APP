@@ -25,7 +25,7 @@ class _EventScreenState extends State<EventScreen> {
   Future<void> _getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userRole = prefs.getString('user_role') ?? 'member';
+      userRole = prefs.getString('role') ?? 'Member';
     });
   }
 
@@ -53,19 +53,22 @@ class _EventScreenState extends State<EventScreen> {
           return ListView.builder(
             itemCount: events.length,
             itemBuilder: (context, index) {
+              final event = events.reversed.toList()[index]; // Reverse the list
               return EventCard(
-                eventId: events[index].id,
-                imageUrl: events[index].featuredImage,
-                title: events[index].name,
-                date: events[index].date,
-                description: events[index].description,
+                eventId: event.id,
+                imageUrl: event.featuredImage,
+                title: event.name,
+                date: event.date,
+                description: event.description,
                 userRole: userRole,
               );
             },
           );
+
+
         },
       ),
-      floatingActionButton: userRole == 'admin'
+      floatingActionButton: userRole == 'Admin'
           ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -73,8 +76,11 @@ class _EventScreenState extends State<EventScreen> {
             MaterialPageRoute(builder: (context) => AddEventScreen()),
           );
         },
-        child: Icon(Icons.add),
-        backgroundColor: Colors.blue,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Colors.orange,
       )
           : null,
     );

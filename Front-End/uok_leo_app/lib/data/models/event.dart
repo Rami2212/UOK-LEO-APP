@@ -1,15 +1,15 @@
 class Event {
-  final String id;
-  final String name;
-  final String date;
-  final String time;
-  final String venue;
-  final String avenue;
-  final String description;
-  final String content;
-  final String contact;
-  final String featuredImage;
-  final List<String> images;
+  String id;
+  String name;
+  String date;
+  String time;
+  String venue;
+  String avenue;
+  String description;
+  String content;
+  String contact;
+  String featuredImage;
+  List<String> images;
 
   Event({
     required this.id,
@@ -25,27 +25,27 @@ class Event {
     required this.images,
   });
 
-  // Factory method to create an Event from JSON
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
-      id: json['id'],
-      name: json['name'],
-      date: json['date'],
-      time: json['time'],
-      venue: json['venue'],
-      avenue: json['avenue'],
-      description: json['description'],
-      content: json['content'],
-      contact: json['contact'],
-      featuredImage: json['featuredImage'],
-      images: List<String>.from(json['images']),
+      id: json['_id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      date: json['date']?.toString() ?? '',
+      time: json['time']?.toString() ?? '',
+      venue: json['venue']?.toString() ?? '',
+      avenue: json['avenue']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      content: json['content']?.toString() ?? '',
+      contact: json['contact']?.toString() ?? '',
+      featuredImage: json['featuredImage']?.toString() ?? '',
+      images: json['images'] != null
+          ? List<String>.from(json['images'])
+          : [],
     );
   }
 
-  // toJson method to convert the Event object back to a JSON map
+
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'date': date,
       'time': time,

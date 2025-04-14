@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         title: 'UOK LEO App',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.orange,
         ),
         home: Consumer<AuthProvider>(
           builder: (context, auth, child) {

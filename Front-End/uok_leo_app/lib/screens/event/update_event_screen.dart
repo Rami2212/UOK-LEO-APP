@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../data/models/event.dart';
 import '../../data/repositories/event_repository.dart';
+import '../../widgets/widgets.dart';
 
 class UpdateEventScreen extends StatefulWidget {
   final String eventId;
@@ -21,6 +22,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
   final _descriptionController = TextEditingController();
   final _contentController = TextEditingController();
   final _contactController = TextEditingController();
+  final _featuredImageController = TextEditingController();
   final _imageUrlController = TextEditingController();
 
   final EventRepository _eventRepository = EventRepository();
@@ -47,6 +49,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
         _descriptionController.text = event.description;
         _contentController.text = event.content ?? '';
         _contactController.text = event.contact ?? '';
+        _featuredImageController.text = event.featuredImage ?? '';
         _imageUrls = event.images ?? [];
         _isLoading = false;
       });
@@ -79,7 +82,7 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
         description: _descriptionController.text,
         content: _contentController.text,
         contact: _contactController.text,
-        featuredImage: _imageUrls.isNotEmpty ? _imageUrls[0] : '',
+        featuredImage: _featuredImageController.text,
         images: _imageUrls,
       );
 
@@ -147,17 +150,29 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                   decoration: InputDecoration(labelText: "Contact"),
                   validator: (value) => value!.isEmpty ? "Contact is required" : null,
                 ),
+                TextFormField(
+                  controller: _featuredImageController,
+                  decoration: InputDecoration(labelText: "Featured Image ID"),
+                ),
                 SizedBox(height: 10),
 
                 // Image URL Input
                 TextFormField(
                   controller: _imageUrlController,
-                  decoration: InputDecoration(labelText: "Image URL"),
+                  decoration: InputDecoration(labelText: "Image ID"),
                 ),
-                ElevatedButton(
-                  onPressed: _addImageUrl,
-                  child: Text("Add Image"),
+
+                SizedBox(height: 20),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: "Add Image",
+                    onPressed: _addImageUrl,
+                  ),
                 ),
+
+                SizedBox(height: 20),
 
                 // Display added image URLs
                 _imageUrls.isNotEmpty
@@ -179,9 +194,13 @@ class _UpdateEventScreenState extends State<UpdateEventScreen> {
                     : Container(),
 
                 SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _updateEvent,
-                  child: Text("Update Event"),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: "Update Event",
+                    onPressed: _updateEvent,
+                  ),
                 ),
               ],
             ),
