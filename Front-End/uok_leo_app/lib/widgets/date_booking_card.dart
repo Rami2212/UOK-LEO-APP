@@ -19,7 +19,7 @@ class DateBookingCard extends StatelessWidget {
 
     return Card(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 6,
+      elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),

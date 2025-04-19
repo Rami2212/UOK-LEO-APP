@@ -7,8 +7,9 @@ import '../screens/bookings/date_booking_form_screen.dart';
 
 class CalendarWidget extends StatefulWidget {
   final bool isDirector;
+  final bool isAdmin;
 
-  CalendarWidget({required this.isDirector});
+  CalendarWidget({required this.isDirector, required this.isAdmin});
 
   @override
   _CalendarWidgetState createState() => _CalendarWidgetState();
@@ -128,7 +129,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           ),
 
           // Book Date Button (shown only if director)
-          if (widget.isDirector)
+          if (widget.isDirector || widget.isAdmin)
             ElevatedButton(
               onPressed: () {
                 Navigator.push(

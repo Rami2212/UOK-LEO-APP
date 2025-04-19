@@ -16,7 +16,7 @@ class CalendarPage extends StatelessWidget {
         elevation: 0,
         iconTheme: IconThemeData(color: Colors.black),
       ),
-      body: CalendarWidget(isDirector: isDirector),
+      body: CalendarWidget(isDirector: isDirector, isAdmin: isAdmin,),
     );
   }
 }

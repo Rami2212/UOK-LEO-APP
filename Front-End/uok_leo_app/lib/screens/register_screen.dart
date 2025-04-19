@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:uok_leo_app/data/models/registration_request.dart';
 import 'package:uok_leo_app/providers/auth_provider.dart';
 import '../widgets/widgets.dart';
-import 'login_screen.dart';
+import 'email_verify_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -83,19 +83,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
       dob: _selectedDob != null ? DateFormat('yyyy-MM-dd').format(_selectedDob!) : '',
     );
 
+    final email = _emailController.text.trim();
+
     setState(() => _isLoading = true);
-    final success = await authProvider.register(request);
+    final success = await authProvider.register(request, email);
     setState(() => _isLoading = false);
 
-    if (success) {
+    if (success != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginScreen(),
+          builder: (_) => EmailVerifyScreen(),
         ),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Registration failed")),
       );
     }

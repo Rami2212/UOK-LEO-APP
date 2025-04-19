@@ -151,7 +151,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       bool success = await userRepository.deleteUserProfile(widget.user.id);
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Profile deleted")));
-        Navigator.popUntil(context, ModalRoute.withName('/'));
+        Navigator.pushReplacementNamed(context, '/login');
       } else {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete profile")));
       }

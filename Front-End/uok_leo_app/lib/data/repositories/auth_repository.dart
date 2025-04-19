@@ -33,8 +33,8 @@ class AuthRepository {
   }
 
   // Register method
-  Future<Map<String, dynamic>?> register(RegistrationRequest registrationRequest) async {
-    final url = Uri.parse('$baseUrl/create'); // double-check your baseUrl
+  Future<Map<String, dynamic>?> register(RegistrationRequest registrationRequest, String email) async {
+    final url = Uri.parse('$baseUrl/create');
 
     try {
       final response = await http.post(
@@ -50,7 +50,16 @@ class AuthRepository {
         final innerData = responseBody['data']?['data'];
         final success = responseBody['data']?['success'] ?? false;
 
-        if (innerData != null) {
+        final otpResponse = await http.post(
+          Uri.parse('$baseUrl/otp/${innerData['userID']}'),
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({"email": email}),
+        );
+
+        if (otpResponse.statusCode == 200) {
+          final otpBody = json.decode(otpResponse.body);
+          final otp = otpBody['data']?['otp']; // Extract the OTP
+
           return {
             "userID": innerData['userID'],
             "email": innerData['email'],
@@ -59,7 +68,10 @@ class AuthRepository {
             "token": innerData['token'],
             "message": responseBody['message'],
             "success": success,
+            "otp": otp.toString(), // Return the OTP
           };
+        } else {
+          print("Failed to send OTP: ${otpResponse.statusCode}");
         }
       } else {
         print("Registration failed: ${response.statusCode} - ${response.body}");
@@ -69,6 +81,32 @@ class AuthRepository {
     }
 
     return null;
+  }
+
+  // Reset Password
+  Future<Map<String, dynamic>> changeUserPassword({
+    required String userId,
+    required String newPassword,
+  }) async {
+    final url = Uri.parse('$baseUrl/changePw/$userId');
+
+    try {
+      final response = await http.put(
+        url,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({"password": newPassword}),
+      );
+
+      final data = json.decode(response.body);
+
+      if (response.statusCode == 200) {
+        return {"success": true, "data": data};
+      } else {
+        return {"success": false, "message": data['message'] ?? 'Unknown error'};
+      }
+    } catch (e) {
+      return {"success": false, "message": "Error: $e"};
+    }
   }
 
 
