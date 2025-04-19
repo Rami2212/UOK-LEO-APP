@@ -1,0 +1,2 @@
+D:/Projects/LEO APP/UOK-LEO-APP/Front-End/uok_leo_app/android/app/.cxx/Debug/1r5q45g5/x86_64/CMakeFiles/edit_cache.dir
+D:/Projects/LEO APP/UOK-LEO-APP/Front-End/uok_leo_app/android/app/.cxx/Debug/1r5q45g5/x86_64/CMakeFiles/rebuild_cache.dir

@@ -24,8 +24,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
-  bool? _isDirector;
-  bool? _isAdmin;
+  bool _isDirector = false;
+  bool _isAdmin = false;
   late Future<List<Event>> _eventsFuture;
   late Future<List<Achievement>> _achievementsFuture;
   late Future<List<Evaluation>> _evaluationsFuture;
@@ -70,9 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
       EventScreen(eventsFuture: _eventsFuture),
       AchievementScreen(achievementsFuture: _achievementsFuture),
       EvaluationScreen(evaluationsFuture: _evaluationsFuture),
-      CalendarPage(isDirector: true, isAdmin: true),
+      CalendarPage(isDirector: _isDirector, isAdmin: _isAdmin),
       NotificationScreen(notificationsFuture: _notificationsFuture),
-      _isAdmin! ? AdminFunctionsScreen() : ProfileScreen(),
+      _isAdmin ? AdminFunctionsScreen() : ProfileScreen(),
     ];
 
     return Scaffold(

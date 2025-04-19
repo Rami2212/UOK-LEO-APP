@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uok_leo_app/screens/reset_password_screen.dart';
 import '../../data/models/user.dart';
 import '../../data/repositories/user_repository.dart';
 import '../../widgets/widgets.dart';
@@ -38,6 +39,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: Text("Profile"),
         actions: [
+          Text(
+            "Logout",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 20,
+            ),
+          ),
           IconButton(
             icon: Icon(Icons.logout),
             tooltip: 'Logout',
@@ -96,6 +104,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         context,
                         MaterialPageRoute(builder: (_) =>
                             EditProfileScreen(user: user)),
+                      );
+                    },
+                  ),
+                ),
+
+                SizedBox(height: 10),
+
+                SizedBox(
+                  width: double.infinity, // Ensures the button takes up full width
+                  child: CustomButton(
+                    text: "Reset Password",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) =>
+                            ResetPasswordScreen()),
                       );
                     },
                   ),

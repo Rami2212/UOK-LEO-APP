@@ -44,10 +44,11 @@ class _DateBookingsScreenState extends State<DateBookingsScreen> {
           return ListView.builder(
             itemCount: bookings.length,
             itemBuilder: (context, index) {
+              final reversedBookings = bookings.reversed.toList();
               return DateBookingCard(
-                booking: bookings[index],
+                booking: reversedBookings[index],
                 onApprove: () async {
-                  bool success = await _repository.approveDateBooking(bookings[index].id);
+                  bool success = await _repository.approveDateBooking(reversedBookings[index].id);
                   if (success) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Booking approved")));
                     _refreshBookings();
@@ -56,7 +57,7 @@ class _DateBookingsScreenState extends State<DateBookingsScreen> {
                   }
                 },
                 onReject: () async {
-                  bool success = await _repository.rejectDateBooking(bookings[index].id);
+                  bool success = await _repository.rejectDateBooking(reversedBookings[index].id);
                   if (success) {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Booking rejected")));
                     _refreshBookings();
@@ -67,6 +68,7 @@ class _DateBookingsScreenState extends State<DateBookingsScreen> {
               );
             },
           );
+
         },
       ),
     );

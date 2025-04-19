@@ -33,9 +33,26 @@ class _EventScreenState extends State<EventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home", style: TextStyle(color: Colors.black)),
         backgroundColor: Colors.white,
         elevation: 0,
+        title: const Text(
+          'UOK LEO CLUB',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Image.asset(
+              'assets/images/logo.png', // make sure this path is correct
+              height: 40,
+              width: 40,
+            ),
+          ),
+        ],
       ),
       body: FutureBuilder<List<Event>>(
         future: widget.eventsFuture,

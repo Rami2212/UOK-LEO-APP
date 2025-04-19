@@ -43,7 +43,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
-            return Center(child: Text("Failed to load notifications: ${snapshot.error}"));
+            return Center(child: Text("No notifications available"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text("No notifications available"));
           }

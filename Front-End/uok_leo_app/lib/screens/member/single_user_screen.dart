@@ -74,14 +74,6 @@ class _SingleUserScreenState extends State<SingleUserScreen> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: user.profileImage.isNotEmpty
-                      ? NetworkImage(user.profileImage)
-                      : AssetImage('assets/images/default_avatar.png') as ImageProvider,
-                ),
-                SizedBox(height: 20),
-
                 _buildUserTile(Icons.person, "Name", "${user.name} ${user.lastName}"),
                 _buildUserTile(Icons.badge, "Student ID", user.studentId),
                 _buildUserTile(Icons.school, "Faculty", user.faculty),
