@@ -26,11 +26,27 @@ class _AddEventScreenState extends State<AddEventScreen> {
   final _featuredImageController = TextEditingController();
   final List<TextEditingController> _imageControllers = [TextEditingController()];
 
-  final List<String> _avenues = ['Education & Literacy',
-    'Environment Conservation',
-    'Healthcare',
-    'Clean Water & Energy Conservation'
-
+  final List<String> _avenues = [
+    'Education & Literacy Avenue',
+    'Youth Development Avenue',
+    'Environmental Conservation Avenue',
+    'Sustainable Development Avenue',
+    'International Relations Avenue',
+    'Child & Elder Care Avenue',
+    'Sports & Recreation Avenue',
+    'Poverty & Hunger Avenue',
+    'Religion & Culture Avenue',
+    'Health Care Avenue',
+    'Clean Water & Energy Conservation Avenue',
+    'Wildlife & Animal Conservation Avenue',
+    'Differently Abled Avenue',
+    'Women Empowerment Avenue',
+    'Betterment Of Leoism Unit',
+    'Editorial Unit',
+    'Marketing Unit',
+    'Public Relations Unit',
+    'Fundraising Unit',
+    'Information Technology Unit'
   ];
 
   String? _selectedAvenue;

@@ -29,8 +29,36 @@ class _AddMemberScreenState extends State<AddMemberScreen> {
   String _selectedFaculty = 'Science';
 
   final List<String> roles = ['Member', 'Director', 'Admin'];
-  final List<String> avenues = ['Default', 'Leadership', 'Service', 'Fundraising', 'Fellowship'];
-  final List<String> faculties = ['Science', 'Arts', 'Commerce', 'Management'];
+  final List<String> avenues = [
+    'Education & Literacy Avenue',
+    'Youth Development Avenue',
+    'Environmental Conservation Avenue',
+    'Sustainable Development Avenue',
+    'International Relations Avenue',
+    'Child & Elder Care Avenue',
+    'Sports & Recreation Avenue',
+    'Poverty & Hunger Avenue',
+    'Religion & Culture Avenue',
+    'Health Care Avenue',
+    'Clean Water & Energy Conservation Avenue',
+    'Wildlife & Animal Conservation Avenue',
+    'Differently Abled Avenue',
+    'Women Empowerment Avenue',
+    'Betterment Of Leoism Unit',
+    'Editorial Unit',
+    'Marketing Unit',
+    'Public Relations Unit',
+    'Fundraising Unit',
+    'Information Technology Unit'
+  ];
+  final List<String> faculties = [
+    'Science',
+    'Commerce & Management Studies',
+    'Computing & Technology',
+    'Social Sciences',
+    'Humanities',
+    'Medicine'
+  ];
 
   Future<void> _selectDOB(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
