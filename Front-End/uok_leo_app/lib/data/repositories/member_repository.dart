@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/member.dart';
 
 class MemberRepository {
-  final String baseUrl = "http://localhost:3000/api";
+  final String baseUrl = "https://leo-production-4c2e.up.railway.app/api";
 
   Future<List<Member>> fetchAllMembers() async {
     final response = await http.get(Uri.parse("$baseUrl/members"));

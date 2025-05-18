@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/notification.dart';
 
 class NotificationRepository {
-  final String baseUrl = "http://10.0.2.2:3000/api/v1/notifications";
+  final String baseUrl = "https://leo-production-4c2e.up.railway.app/api/v1/notifications";
 
   // Private helper to get stored token and userId
   Future<Map<String, String?>> _getAuthData() async {

@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/event.dart';
 
 class EventRepository {
-  final String baseUrl = "http://10.0.2.2:3000/api/v1";
+  final String baseUrl = "https://leo-production-4c2e.up.railway.app/api/v1";
 
   Future<String?> _getToken() async {
     final prefs = await SharedPreferences.getInstance();

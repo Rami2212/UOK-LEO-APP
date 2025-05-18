@@ -5,7 +5,7 @@ import 'package:uok_leo_app/data/models/profile_edit_request.dart';
 import '../models/user.dart';
 
 class UserRepository {
-  final String baseUrl = "http://10.0.2.2:3000/api/v1";
+  final String baseUrl = "https://leo-production-4c2e.up.railway.app/api/v1";
 
   // Private helper to get the token
   Future<String?> _getToken() async {
