@@ -24,19 +24,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _confirmPasswordController = TextEditingController();
 
   final List<String> _roles = ['Member', 'Director'];
-  final List<String> _avenues = ['Education & Literacy',
-    'Environment Conservation',
-    'Healthcare',
-    'Clean Water & Energy Conservation'
-
+  final List<String> _avenues = [
+    'Education & Literacy Avenue',
+    'Youth Development Avenue',
+    'Environmental Conservation Avenue',
+    'Sustainable Development Avenue',
+    'International Relations Avenue',
+    'Child & Elder Care Avenue',
+    'Sports & Recreation Avenue',
+    'Poverty & Hunger Avenue',
+    'Religion & Culture Avenue',
+    'Health Care Avenue',
+    'Clean Water & Energy Conservation Avenue',
+    'Wildlife & Animal Conservation Avenue',
+    'Differently Abled Avenue',
+    'Women Empowerment Avenue',
+    'Betterment Of Leoism Unit',
+    'Editorial Unit',
+    'Marketing Unit',
+    'Public Relations Unit',
+    'Fundraising Unit',
+    'Information Technology Unit'
   ];
 
-  final List<String> _faculties = ['Science',
+  final List<String> _faculties = [
+    'Science',
     'Commerce & Management Studies',
     'Computing & Technology',
     'Social Sciences',
-    'Humanities'
-  'Medicine'
+    'Humanities',
+    'Medicine'
   ];
 
   String? _selectedRole;

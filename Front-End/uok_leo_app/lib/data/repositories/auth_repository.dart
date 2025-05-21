@@ -4,7 +4,7 @@ import '../models/login_request.dart';
 import '../models/registration_request.dart';
 
 class AuthRepository {
-  final String baseUrl = "http://10.0.2.2:3000/api/v1/users";
+  final String baseUrl = "https://leo-production-4c2e.up.railway.app/api/v1/users";
 
   // Login method
   Future<Map<String, dynamic>?> login(LoginRequest request) async {

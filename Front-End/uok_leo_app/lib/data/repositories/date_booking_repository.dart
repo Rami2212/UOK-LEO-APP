@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/date_booking.dart';
 
 class DateBookingRepository {
-  final String baseUrl = "http://10.0.2.2:3000/api/v1";
+  final String baseUrl = "https://leo-production-4c2e.up.railway.app/api/v1";
 
   // Private method to get token
   Future<String?> _getToken() async {
