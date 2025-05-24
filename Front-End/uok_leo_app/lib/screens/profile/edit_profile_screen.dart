@@ -44,8 +44,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     'Commerce & Management Studies',
     'Computing & Technology',
     'Social Sciences',
-    'Humanities'
-        'Medicine'
+    'Humanities',
+    'Medicine'
   ];
 
   DateTime? _selectedDob;

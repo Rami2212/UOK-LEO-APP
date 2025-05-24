@@ -77,7 +77,7 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
             const SizedBox(height: 16),
             CustomTextField(
               controller: _otpController,
-              hintText: 'Enter the 6-digit code',
+              hintText: 'Enter the 6-digit code sent to your email',
             ),
             const SizedBox(height: 20),
             SizedBox(
