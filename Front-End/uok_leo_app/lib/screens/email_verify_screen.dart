@@ -14,6 +14,7 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
   bool _isVerifying = false;
   String? _actualOtp;
   String? _userId;
+  String? _email;
 
   @override
   void initState() {
@@ -26,6 +27,7 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
     setState(() {
       _actualOtp = prefs.getString('otp');
       _userId = prefs.getString('userId');
+      _email = prefs.getString('email');
     });
   }
 
@@ -75,9 +77,14 @@ class _EmailVerifyScreenState extends State<EmailVerifyScreen> {
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
+            Text(
+              'Enter the 6-digit code sent to your email: $_email',
+              style: TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 16),
             CustomTextField(
               controller: _otpController,
-              hintText: 'Enter the 6-digit code sent to your email',
+              hintText: 'Enter the 6-digit code',
             ),
             const SizedBox(height: 20),
             SizedBox(

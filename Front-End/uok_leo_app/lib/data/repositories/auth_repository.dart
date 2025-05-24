@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/login_request.dart';
 import '../models/registration_request.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
   final String baseUrl = "https://leo-production-4c2e.up.railway.app/api/v1/users";
@@ -60,6 +61,11 @@ class AuthRepository {
           final otpBody = json.decode(otpResponse.body);
           final otp = otpBody['data']?['otp']; // Extract the OTP
 
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('userID', innerData['userID']);
+          await prefs.setString('email', innerData['email']);
+          await prefs.setString('otp', otp.toString());
+          print(innerData['userID'] + innerData['email'] + otp.toString());
           return {
             "userID": innerData['userID'],
             "email": innerData['email'],
